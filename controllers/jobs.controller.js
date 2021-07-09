@@ -38,7 +38,7 @@ const postJobCreation = (req, res) => {
                   .then((user) => res.json({ user, data }))
                   .catch((err) => console.log(err));
               } else {
-                return res.status(200).json({ message: "no instructor" });
+                return res.status(200).json({ message: "no such user" });
               }
             });
           }

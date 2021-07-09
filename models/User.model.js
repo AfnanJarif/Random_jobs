@@ -31,6 +31,10 @@ const UserSchema = new mongoose.Schema({
       type: String,
       required: true,
   },
+  age: {
+    type: Number,
+    required: true
+  },
   address: {
       street: {
           type: String,
@@ -46,7 +50,13 @@ const UserSchema = new mongoose.Schema({
   },
   jobs:[{
     type: String,
-  }]
+  }],
+  wishlistID: {
+    type: String,
+  },
+  ratingID: {
+    type: String,
+  }
 });
 
 const User = mongoose.model("User", UserSchema);

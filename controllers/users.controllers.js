@@ -19,8 +19,19 @@ const getRegister = (req, res) => {
 };
 
 const postRegister = (req, res) => {
-  const { name, email, password, confirm_password, usertype, phone, occupation, street, city } = req.body;
-  console.log(req.body);
+  const { name, 
+    email, 
+    password, 
+    confirm_password, 
+    usertype, 
+    phone, 
+    occupation,
+    age, 
+    street, 
+    city, 
+    recruitertype } = req.body;
+
+
   //Data Validation
   const errors = [];
   if (!name || !email || !password || !confirm_password || !usertype || !phone || !occupation || !street || !city) {
@@ -42,7 +53,8 @@ const postRegister = (req, res) => {
       if (user) {
         errors.push("User already exists with this email!");
         req.flash("errors", errors);
-        res.send(user);
+        res.send(errors);
+        //res.send(user);
         //res.redirect("/users/register");
       } else {
         bcrypt.genSalt(10, (err, salt) => {
@@ -69,12 +81,30 @@ const postRegister = (req, res) => {
                   password: hash,
                   usertype: usertype, 
                   phone: phone, 
-                  occupation: occupation, 
+                  occupation: occupation,
+                  age: age 
                 });
                 newUser
                   .save()
                   .then(() => {
-                    res.send(newUser);
+                    if(usertype.toLowerCase() == 'recruiter'){
+                      User.findOneAndUpdate(
+                        { _id: newUser._id },
+                        {recruitertype : recruitertype },
+                        {
+                          new: true,
+                        }
+                      ).exec(async (error, user) => {
+                        if (error) return res.status(400).json({ message: error });
+                        if (user) {
+                          user
+                            .save()
+                            .then((user) => res.json({ user }))
+                            .catch((err) => console.log(err));
+                        }
+                      });
+                    }
+                    //res.send(newUser);
                     //res.redirect("/users/login");
                   })
                   .catch(() => {
