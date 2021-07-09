@@ -6,7 +6,7 @@ const getJobCreation = (req, res) => {
 }
 
 const postJobCreation = (req, res) => {
-    const {_id, name, category, payment } = req.body;
+    const {_id, name, category, jobdescription, payment } = req.body;
 
     User.findById(_id).exec(async (error, user) => {
       if(user){
@@ -14,6 +14,7 @@ const postJobCreation = (req, res) => {
           name: name,
           category: category,
           recruiterID: _id,
+          jobdescription: jobdescription,
           payment: payment,
         });
         newJob.save((error, data) => {

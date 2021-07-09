@@ -9,6 +9,10 @@ const UserSchema = new mongoose.Schema({
       type: String,
       required: true,
   },
+  jobdescription:{
+    tyoe: String,
+    required: true,
+  },
   recruiterID: {
       type: String,
       required: true,
