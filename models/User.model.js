@@ -32,15 +32,21 @@ const UserSchema = new mongoose.Schema({
       required: true,
   },
   address: {
-      Street: {
+      street: {
           type: String,
           required: true,
       },
-      City: {
+      city: {
           type: String,
           required: true,
       }
   },
+  recruitertype:{
+    type: String,
+  },
+  jobs:[{
+    type: String,
+  }]
 });
 
 const User = mongoose.model("User", UserSchema);

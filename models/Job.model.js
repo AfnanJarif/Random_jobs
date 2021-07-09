@@ -9,17 +9,22 @@ const UserSchema = new mongoose.Schema({
       type: String,
       required: true,
   },
-  recruiterType: {
-      type: String,
-      required: true,
-  },
-  recruiterName: {
+  recruiterID: {
       type: String,
       required: true,
   },
   payment: {
       type: Number,
       required: true,
+  },
+  requests: [{
+    type: String,
+  }],
+  assigned: {
+    type: String,
+  },
+  done: {
+    type: Boolean,
   },
   date: {
     type: Date,

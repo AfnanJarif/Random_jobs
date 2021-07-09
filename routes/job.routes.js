@@ -1,13 +1,21 @@
 const express = require("express");
 const router = express.Router();
 const ensureAuthenticated = require("./../middlewares/auth.middleware");
+const isRecruiter = require("./../middlewares/isRecruiter.middleware");
+const {
+  getJobCreation,
+  postJobCreation,
+  getJob,
+  jobRequests,
+  jobAssigned,
+  jobDone
+} = require("./../controllers/jobs.controller");
 
-router.get("/jobCreation", (req, res) => {
-  res.render("welcome.ejs");
-});
-
-router.get("/", ensureAuthenticated, (req, res) => {
-  res.render("dashboard.ejs", { user: req.user });
-});
+router.get("/jobCreation", ensureAuthenticated, isRecruiter, getJobCreation);
+router.post("/jobCreation", postJobCreation);
+router.get("/", getJob);
+router.post("/jobRequests", jobRequests);
+router.post("/jobAssigned", jobAssigned);
+router.post("/jobDone", jobDone);
 
 module.exports = router;

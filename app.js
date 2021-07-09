@@ -23,6 +23,7 @@ mongoose
   });
 //Static Resources
 app.use(express.static("public"));
+app.use(express.json());
 //View Engine
 app.set("view engine", "ejs");
 
@@ -44,7 +45,9 @@ app.use(express.urlencoded({ extended: false }));
 //Routes
 const indexRoutes = require("./routes/index.routes");
 const userRoutes = require("./routes/uers.routes");
+const jobRoutes = require("./routes/job.routes")
 app.use(indexRoutes);
 app.use("/users", userRoutes);
+app.use("/jobs", jobRoutes);
 
 module.exports = app;

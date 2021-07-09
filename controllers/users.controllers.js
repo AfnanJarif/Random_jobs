@@ -19,11 +19,11 @@ const getRegister = (req, res) => {
 };
 
 const postRegister = (req, res) => {
-  const { name, email, password, confirm_password } = req.body;
-
+  const { name, email, password, confirm_password, usertype, phone, occupation, street, city } = req.body;
+  console.log(req.body);
   //Data Validation
   const errors = [];
-  if (!name || !email || !password || !confirm_password) {
+  if (!name || !email || !password || !confirm_password || !usertype || !phone || !occupation || !street || !city) {
     errors.push("All fields are required!");
   }
   if (password.length < 6) {
@@ -42,34 +42,46 @@ const postRegister = (req, res) => {
       if (user) {
         errors.push("User already exists with this email!");
         req.flash("errors", errors);
-        res.redirect("/users/register");
+        res.send(user);
+        //res.redirect("/users/register");
       } else {
         bcrypt.genSalt(10, (err, salt) => {
           if (err) {
             errors.push(err);
             req.flash("errors", errors);
-            res.redirect("/users/register");
+            res.send(err);
+            //res.redirect("/users/register");
           } else {
             bcrypt.hash(password, salt, (err, hash) => {
               if (err) {
                 errors.push(err);
                 req.flash("errors", errors);
-                res.redirect("/users/register");
+                res.send(err);
+                //res.redirect("/users/register");
               } else {
                 const newUser = new User({
-                  name,
-                  email,
+                  address: {
+                    street: street, 
+                    city: city,
+                  },
+                  name: name,
+                  email: email,
                   password: hash,
+                  usertype: usertype, 
+                  phone: phone, 
+                  occupation: occupation, 
                 });
                 newUser
                   .save()
                   .then(() => {
-                    res.redirect("/users/login");
+                    res.send(newUser);
+                    //res.redirect("/users/login");
                   })
                   .catch(() => {
                     errors.push("Saving User to the daatabase failed!");
                     req.flash("errors", errors);
-                    res.redirect("/users/register");
+                    res.send(newUser);
+                    //res.redirect("/users/register");
                   });
               }
             });
