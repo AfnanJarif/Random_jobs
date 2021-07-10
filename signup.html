@@ -57,11 +57,21 @@
 				<div class="col-md-6 col-sm-8 col-md-offset-3 col-sm-offset-2">
 					<form>
 						<img class="img-responsive" alt="logo" src="img/rsz_capture2.png">
-						<input type="text" class="form-control input-lg" placeholder="User Name">
-						<input type="email" class="form-control input-lg" placeholder="email_address">
-                        <input type="number" class="form-control input-lg" placeholder="Phone-no.">
-                        <input type="password" class="form-control input-lg" placeholder="Password">
-                        <input type="password" class="form-control input-lg" placeholder="confirm-pass">
+						<input type="text" class="form-control input-lg" name="uname" placeholder="User Name" required>
+						<input type="email" class="form-control input-lg" name="email" placeholder="Email address" required>
+						<select class="form-control input-lg"  name="usertype" placeholder="User Type" required>
+							<option value="usertype" >Select User Type</option>
+							<option value="recruiter">Recruiter</option>
+							<option value="jobseeker">JobSeeker</option>
+						  </select>
+						
+						<input type="text" class="form-control input-lg" name="occupation" placeholder="Occupation" required>
+						<input type="tel" class="form-control input-lg" name="phone" placeholder="Phone Number:">
+						<input type="text" class="form-control input-lg" name="thana" placeholder="Thana">
+						<input type="text" class="form-control input-lg" name="district" placeholder="District">
+                     
+                        <input type="password" class="form-control input-lg" name="password"  minlength="8" placeholder="Password">
+                        <input type="password" class="form-control input-lg" name="confirmpass" placeholder="Confirm your password">
 						<!-- <label><a href="">Forget Password?</a></label> -->
 						<button type="signup" class="btn btn-primary">signup</button>
 						<!-- <p>Have't Any Account <a href="">Create An Account</a></p> -->
@@ -127,7 +137,7 @@
 				
 			</div>
 			<div class="copy-right">
-			 <p>&copy;Copyright 2018 Jober Desk | Design By <a href="https://themezhub.com/">ThemezHub</a></p>
+			 <!-- <p>&copy;Copyright 2018 Jober Desk | Design By <a href="https://themezhub.com/">ThemezHub</a></p> -->
 			</div>
 		</footer>
 		 
