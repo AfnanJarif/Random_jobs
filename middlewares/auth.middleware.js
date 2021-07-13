@@ -3,8 +3,21 @@ const ensureAuthenticated = (req, res, next) => {
       next();
     } else {
       req.flash("error", "You do not have access!");
-      res.redirect("/users/login");
+      res.redirect("/signin");
     }
   };
-  module.exports = ensureAuthenticated;
+
+  const isLoggedIn = (req, res, next) => {
+    if (req.isAuthenticated()) {
+      req.flash("error", "Already signed in");
+      res.redirect("/");
+    } else {
+      next();
+    }
+  }
+
+  module.exports = {
+    ensureAuthenticated,
+    isLoggedIn
+  };
   

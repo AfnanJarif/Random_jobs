@@ -78,7 +78,6 @@ mongoose
   .catch((error) => {
     console.log(error);
   });
-  mongoose.set('useFindAndModify', false);
   mongoose.set('useCreateIndex', true);
 
 //Static Resources
@@ -103,9 +102,11 @@ app.use(express.urlencoded({ extended: false }));
 
 //Routes
 const indexRoutes = require("./routes/index.routes");
+const authRoutes = require("./routes/auth.routes");
 const userRoutes = require("./routes/users.routes");
 const jobRoutes = require("./routes/job.routes");
 app.use(indexRoutes);
+app.use(authRoutes);
 app.use(userRoutes);
 app.use(jobRoutes);
 

@@ -1,6 +1,9 @@
 const express = require("express");
 const router = express.Router();
-const ensureAuthenticated = require("./../middlewares/auth.middleware");
+const {
+  ensureAuthenticated, 
+  isLoggedIn 
+} = require("./../middlewares/auth.middleware");
 const isRecruiter = require("./../middlewares/isRecruiter.middleware");
 const {
   getJobCreation,

@@ -27,7 +27,7 @@ const UserSchema = new mongoose.Schema({
         message   : '{VALUE} is not an integer value'
       }
   },
-  occupation: {
+  userOccupation: {
       type: String,
       required: true,
   },
@@ -36,17 +36,14 @@ const UserSchema = new mongoose.Schema({
     required: true
   },
   address: {
-      street: {
+      thana: {
           type: String,
           required: true,
       },
-      city: {
+      district: {
           type: String,
           required: true,
       }
-  },
-  recruitertype:{
-    type: String,
   },
   jobs:[{
     type: String,
