@@ -10,7 +10,7 @@ const UserSchema = new mongoose.Schema({
       required: true,
   },
   jobdescription:{
-    tyoe: String,
+    type: String,
     required: true,
   },
   recruiterID: {

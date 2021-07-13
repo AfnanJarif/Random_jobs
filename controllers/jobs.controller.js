@@ -2,7 +2,7 @@ const Job = require('../models/Job.model')
 const User = require("../models/User.model");
 
 const getJobCreation = (req, res) => {
-    res.render("jobs/jobCreation.ejs", { error: req.flash("error") });
+    res.render("jobs/jobCreation.ejs");
 }
 
 const postJobCreation = (req, res) => {

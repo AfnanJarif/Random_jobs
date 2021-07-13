@@ -15,26 +15,28 @@ const postLogin = (req, res, next) => {
 };
 
 const getRegister = (req, res) => {
-  res.render("users/register.ejs", { errors: req.flash("errors") });
+  res.render("users/signup.ejs");
 };
 
 const postRegister = (req, res) => {
-  const { name, 
+  const { 
+    name, 
     email, 
-    password, 
-    confirm_password, 
     usertype, 
     phone, 
     occupation,
     age, 
-    street, 
-    city, 
-    recruitertype } = req.body;
+    thana,
+    district,
+    password, 
+    confirm_password,
+    recruitertype
+   } = req.body;
 
 
   //Data Validation
   const errors = [];
-  if (!name || !email || !password || !confirm_password || !usertype || !phone || !occupation || !street || !city) {
+  if (!name || !email || !password || !confirm_password || !usertype || !phone || !occupation || !thana || !district) {
     errors.push("All fields are required!");
   }
   if (password.length < 6) {
@@ -46,7 +48,8 @@ const postRegister = (req, res) => {
 
   if (errors.length > 0) {
     req.flash("errors", errors);
-    res.redirect("/users/register");
+    res.send(errors);
+    //res.redirect("/users/register");
   } else {
     //Create New User
     User.findOne({ email: email }).then((user) => {
@@ -73,8 +76,8 @@ const postRegister = (req, res) => {
               } else {
                 const newUser = new User({
                   address: {
-                    street: street, 
-                    city: city,
+                    street: thana, 
+                    city: district,
                   },
                   name: name,
                   email: email,
