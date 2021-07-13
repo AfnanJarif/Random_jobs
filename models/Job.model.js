@@ -5,6 +5,10 @@ const UserSchema = new mongoose.Schema({
     type: String,
     required: true,
   },
+  recruiterID: {
+    type: String,
+    required: true,
+},
   category: {
       type: String,
       required: true,
@@ -13,9 +17,9 @@ const UserSchema = new mongoose.Schema({
     type: String,
     required: true,
   },
-  recruiterID: {
-      type: String,
-      required: true,
+  jobtype:{
+    type: String,
+    required: true,
   },
   payment: {
       type: Number,

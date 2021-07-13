@@ -2,18 +2,19 @@ const Job = require('../models/Job.model')
 const User = require("../models/User.model");
 
 const getJobCreation = (req, res) => {
-    res.render("jobs/jobCreation.ejs");
+    res.render("jobs/jobCreation.ejs", { errors: req.flash("errors"), req: req });
 }
 
 const postJobCreation = (req, res) => {
-    const {_id, name, category, jobdescription, payment } = req.body;
+    const {name, category, jobtype, jobdescription, payment } = req.body;
 
-    User.findById(_id).exec(async (error, user) => {
+    User.findById(req.user._id).exec(async (error, user) => {
       if(user){
         const newJob = new Job({
           name: name,
           category: category,
-          recruiterID: _id,
+          jobtype: jobtype,
+          recruiterID: req.user._id,
           jobdescription: jobdescription,
           payment: payment,
         });
@@ -24,7 +25,7 @@ const postJobCreation = (req, res) => {
   
           if (data) {
             User.findOneAndUpdate(
-              { _id: _id },
+              { _id: req.user._id },
               {
                 $push: {jobs : data._id },
               },
@@ -36,7 +37,7 @@ const postJobCreation = (req, res) => {
               if (user) {
                 user
                   .save()
-                  .then((user) => res.json({ user, data }))
+                  .then((user) => res.redirect("/"))
                   .catch((err) => console.log(err));
               } else {
                 return res.status(200).json({ message: "no such user" });
