@@ -37,7 +37,7 @@ const postJobCreation = (req, res) => {
               if (user) {
                 user
                   .save()
-                  .then((user) => res.redirect("/"))
+                  .then((user) => res.redirect("/dashboard"))
                   .catch((err) => console.log(err));
               } else {
                 return res.status(200).json({ message: "no such user" });
@@ -51,16 +51,23 @@ const postJobCreation = (req, res) => {
 
 const getJob = (req, res) => {
 
-  const _id = req.body;
+  const jobs = [];
 
-  Job.findById(_id).exec(async (error, job) => {
-    if(job){
-      User.findById(job.recruiterID).exec(async (error, user) => {
-        res.send([job, user]);
-      })
+  User.findById(req.user._id).exec((error, user) => {
+
+    if(user){
+      for(var i = 0; i < user.jobs.length; i++){
+        Job.findById(user.jobs[i]).exec((error, data) => {
+          if(data){
+            jobs.push(data);
+          } 
+          if(i == user.jobs.length){
+            res.render("jobs/job.ejs", {jobs: jobs, req: req});  
+          }
+        }); 
+      }
     }
-  });
-  //res.render("jobs/job.ejs", { error: req.flash("error") });
+  });  
 }
 
 const jobRequests = (req,res) => {

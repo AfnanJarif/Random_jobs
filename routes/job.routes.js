@@ -15,8 +15,8 @@ const {
 } = require("./../controllers/jobs.controller");
 
 router.get("/jobCreation", ensureAuthenticated, isRecruiter, getJobCreation);
-router.post("/jobCreation", postJobCreation);
-router.get("/", getJob);
+router.post("/jobCreation", ensureAuthenticated, isRecruiter, postJobCreation);
+router.get("/jobs",ensureAuthenticated, isRecruiter, getJob);
 router.post("/jobRequests", jobRequests);
 router.post("/jobAssigned", jobAssigned);
 router.post("/jobDone", jobDone);
