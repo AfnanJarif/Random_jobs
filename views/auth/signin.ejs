@@ -1,0 +1,26 @@
+		<%- include('../partials/head.ejs') %>
+		
+		<title>Sign In | Random Jobs</title>
+   
+		<%- include('../partials/navbar.ejs') %>
+
+		<!-- Sign Up section start -->
+		<section class="login-wrapper">
+			<div class="container">
+				<div class="col-md-6 col-sm-8 col-md-offset-3 col-sm-offset-2">
+					<%if(error.length>0){%>
+						<div class="alert alert-danger"><%=error%></div>
+						<%}%>
+					<form action="/signin" method="POST">
+						<img class="img-responsive" alt="logo" src="img/signin.png">
+						<input type="email" class="form-control input-lg" name="email" placeholder="Email" required>
+						<input type="password" class="form-control input-lg" name="password" placeholder="Password" required>
+						<button type="submit" class="btn btn-primary">Sign In</button>
+						<p>Don't have an Account? <a href="/signup">Sign Up</a></p>
+					</form>
+				</div>		
+			</div>
+		</section>
+		<!-- Sign Up section End -->	
+		
+		<%- include('../partials/footer.ejs') %>
