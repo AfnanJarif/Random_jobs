@@ -45,6 +45,9 @@ const UserSchema = new mongoose.Schema({
           required: true,
       }
   },
+  details:{
+    type: String,
+  },
   jobs:[{
     type: String,
   }],
@@ -53,7 +56,13 @@ const UserSchema = new mongoose.Schema({
   },
   ratingID: {
     type: String,
-  }
+  },
+  otpcode:{
+    type: String,
+  },
+  otpcodetime:{
+    type: Date,
+  },
 });
 
 const User = mongoose.model("User", UserSchema);

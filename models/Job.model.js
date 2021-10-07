@@ -1,6 +1,6 @@
 const mongoose = require("mongoose");
 
-const UserSchema = new mongoose.Schema({
+const JobSchema = new mongoose.Schema({
   name: {
     type: String,
     required: true,
@@ -21,6 +21,24 @@ const UserSchema = new mongoose.Schema({
     type: String,
     required: true,
   },
+  startdate:{
+    type: Date,
+    required: true,
+  },
+  enddate:{
+    type: Date,
+    required: true,
+  },
+  location:{
+    thana: {
+      type: String,
+      required: true,
+    },
+    district: {
+      type: String,
+      required: true,
+    }
+  },
   payment: {
       type: Number,
       required: true,
@@ -40,5 +58,5 @@ const UserSchema = new mongoose.Schema({
   },
 });
 
-const User = mongoose.model("Job", UserSchema);
-module.exports = User;
+const Job = mongoose.model("Job", JobSchema);
+module.exports = Job;

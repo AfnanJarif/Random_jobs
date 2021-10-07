@@ -78,8 +78,7 @@ mongoose
   .catch((error) => {
     console.log(error);
   });
-  mongoose.set('useCreateIndex', true);
-
+  
 //Static Resources
 app.use(express.static("public"));
 //View Engine
