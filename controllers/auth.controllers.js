@@ -1,7 +1,12 @@
+require("dotenv").config();
 const User = require("../models/User.model");
 const bcrypt = require("bcryptjs");
 const passport = require("passport");
 
+
+
+
+//Authentication
 const getLogin = (req, res) => {
   res.render("auth/signin.ejs", { error: req.flash("error"), req: req });
 };
@@ -19,6 +24,7 @@ const getRegister = (req, res) => {
 };
 
 const postRegister = (req, res) => {
+  
   const { 
     name, 
     email, 
@@ -31,7 +37,6 @@ const postRegister = (req, res) => {
     confirm_password,
     userOccupation
    } = req.body;
-
 
   //Data Validation
   const errors = [];
@@ -50,7 +55,6 @@ const postRegister = (req, res) => {
     res.send(errors);
     res.redirect("/signin");
   } else {
-    //Create New User
     User.findOne({ email: email }).then((user) => {
       if (user) {
         errors.push("User already exists with this email!");
@@ -68,7 +72,7 @@ const postRegister = (req, res) => {
                 errors.push(err);
                 req.flash("errors", errors);
                 res.redirect("/signup");
-              } else {
+              } else {                
                 const newUser = new User({
                   address: {
                     thana: thana, 
@@ -80,17 +84,21 @@ const postRegister = (req, res) => {
                   usertype: usertype, 
                   phone: phone, 
                   userOccupation: userOccupation,
-                  age: age 
+                  age: age,
+                  otpcode: otpcode,
+                  otpcodetime: new Date().getTime() + 300000, 
                 });
                 newUser
                   .save()
-                  .then(() => res.redirect("/signin"))
+                  .then(() => {
+                    res.redirect("/signin");
+                  })
                   .catch(() => {
                     errors.push("Saving User to the daatabase failed!");
                     req.flash("errors", errors);
                     res.redirect("/signup");
                   });
-              }
+                }
             });
           }
         });
