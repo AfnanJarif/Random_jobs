@@ -8,9 +8,12 @@
 		<section class="login-wrapper">
 			<div class="container">
 				<div class="col-md-6 col-sm-8 col-md-offset-3 col-sm-offset-2">
-					<%if(error.length>0){%>
-						<div class="alert alert-danger"><%=error%></div>
-						<%}%>
+					<% let success="Your account have been created Successfully. Please Sign In!" %>
+					<%if(error.length>0){if(error==success){%>
+					<div class="alert alert-success"><%=error%></div>
+					<%}else{%>
+					<div class="alert alert-danger"><%=error%></div>
+					<%}%><%}%>
 					<form action="/signin" method="POST">
 						<img class="img-responsive" alt="logo" src="img/signin.png">
 						<input type="email" class="form-control input-lg" name="email" placeholder="Email" required>

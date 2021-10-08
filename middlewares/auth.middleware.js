@@ -1,6 +1,6 @@
 const ensureAuthenticated = (req, res, next) => {
     if (req.isAuthenticated()) {
-      next();
+      next()
     } else {
       req.flash("error", "You do not have access!");
       res.redirect("/signin");
@@ -18,7 +18,6 @@ const ensureAuthenticated = (req, res, next) => {
 
   module.exports = {
     ensureAuthenticated,
-    isVerified,
     isLoggedIn
   };
   

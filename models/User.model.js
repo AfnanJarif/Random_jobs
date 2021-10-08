@@ -57,10 +57,6 @@ const UserSchema = new mongoose.Schema({
   ratingID: {
     type: String,
   },
-  emailVerified:{
-    type: Boolean,
-    default: false,
-  },
   otpcode:{
     type: String,
   },
