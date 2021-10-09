@@ -36,6 +36,10 @@ const UserSchema = new mongoose.Schema({
     required: true
   },
   address: {
+      street:{
+        type: String,
+        required: false,
+      },
       thana: {
           type: String,
           required: true,
@@ -62,6 +66,14 @@ const UserSchema = new mongoose.Schema({
   },
   otpcodetime:{
     type: Date,
+  },
+  profilepic:{
+    type: String,
+    default: null,
+  },
+  cv:{
+    type: String,
+    default: null,
   },
 });
 

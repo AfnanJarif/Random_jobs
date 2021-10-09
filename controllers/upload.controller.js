@@ -1,36 +1,164 @@
-const upload = require("../middleware/upload");
-const User = require("../models/User.model");
+require("dotenv").config();
+const User = require("../model/User.model");
+const mongoose = require('mongoose');
+const Grid = require('gridfs-stream');
+const multer = require('multer');
+const GridFsStorage = require('multer-gridfs-storage');
+const num = require("num");
 
-const uploadFile = async (req, res) => {
-  try {
-    await upload(req, res);
+function between(min, max) {  
+  return Math.floor(
+      Math.random() * (max - min + 1) + min
+  )
+}
 
-    const errors = [];
-    console.log(req.file);
-    if (req.file == undefined) {
-        errors.push("You must select a file.");
-    }
+const profilePicStorage = new GridFsStorage({
+  url: process.env.MongoURI,
+  file: (req, file) => {
+    return new Promise((resolve, reject) => {
+      crypto.randomBytes(16, (err, buf) => {
+        if (err) {
+          return reject(err);
+        } 
+        const filename = req.user._id + file.originalname + num.toString(between(1000000000, 9999999999));
+        const fileInfo = {
+          filename: filename,
+          bucketName: 'uploads'
+        };
+        resolve(fileInfo);
+      });
+    });
+  }
+});
+const uploadProfilePic = multer({ profilePicStorage });
 
-    User.findOneAndUpdat(
-        { _id: req.user._id },
-        { image: req.file.filename },
-        {
-          new: true,
-        }
-      ).exec(async (error, user) => {
-        if (error) return res.status(400).json({ message: error });
-        if (course) {
-          return res.json({ course: course });
-        } else {
-          return res.status(200).json({ message: "no course" });
+const cvStorage = new GridFsStorage({
+  url: process.env.MongoURI,
+  file: (req, file) => {
+    return new Promise((resolve, reject) => {
+      crypto.randomBytes(16, (err, buf) => {
+        if (err) {
+          return reject(err);
+        } 
+        const filename = req.user._id + file.originalname;
+        const fileInfo = {
+          filename: filename,
+          bucketName: 'uploads'
+        };
+        resolve(fileInfo);
+      });
+    });
+  }
+});
+const uploadCV = multer({ cvStorage });
+
+const conn = mongoose.createConnection(process.env.MongoURI);
+let gfs;
+
+conn.once('open', () => {
+  gfs = Grid(conn.db, mongoose.mongo);
+  gfs.collection('uploads');
+});
+
+
+const insertProfilePic = (req, res) => {
+  if(req.user.profilepic != null){
+    gfs.remove({ filename: req.user.profilepic, root: 'uploads' }, (err, gridStore) => {
+      if (err) {
+        gfs.remove({ filename: req.file.filename, root: 'uploads' }, (err, gridStore) => {
+          if (err) {
+            errors.push("Can't delete current Profile Picture");
+            req.flash("errors", errors);
+            res.redirect("/uploadprofilepic");
+          }
+          errors.push("Can't delete previous Profile Picture");
+          req.flash("errors", errors);
+          res.redirect("/uploadprofilepic");
+        });
+      }
+    });
+  }
+  
+  User.findOne({email : email})
+  .then((user) => {
+    user.profilepic = req.file.filename;
+  })
+  .save()
+  .catch((err) => {
+    if (err){
+      gfs.remove({ filename: req.file.filename, root: 'uploads' }, (err, gridStore) => {
+        if (err) {
+          errors.push("Can't delete current Profile Picture(user save part)");
+          req.flash("errors", errors);
+          res.redirect("/uploadprofilepic");
         }
       });
-
-    return res.send(`File has been uploaded.`);
-  } catch (error) {
-    console.log(error);
-    return res.send(`Error when trying upload image: ${error}`);
-  }
+      errors.push("Can't update user");
+      req.flash("errors", errors);
+      res.redirect("/uploadprofilepic");
+    }
+  })
 };
 
-module.exports = uploadFile;
+
+const insertCV = (req, res) => {
+  if(req.user.cv != null){
+    gfs.remove({ filename: req.user.cv, root: 'uploads' }, (err, gridStore) => {
+      if (err) {
+        gfs.remove({ filename: req.file.filename, root: 'uploads' }, (err, gridStore) => {
+          if (err) {
+            errors.push("Can't delete current CV");
+            req.flash("errors", errors);
+            res.redirect("/uploadCV");
+          }
+        });
+  
+        errors.push("Can't delete previous CV");
+        req.flash("errors", errors);
+        res.redirect("/uploadCV");
+      }
+    });
+  }
+ 
+  User.findOne({email : email})
+  .then((user) => {
+    user.cv = req.file.filename;
+  })
+  .save()
+  .catch((err) => {
+    if (err){
+      gfs.remove({ filename: req.file.filename, root: 'uploads' }, (err, gridStore) => {
+        if (err) {
+          errors.push("Can't delete current CV(user save part)");
+          req.flash("errors", errors);
+          res.redirect("/uploadCV");
+        }
+      });
+      errors.push("Can't update user");
+      req.flash("errors", errors);
+      res.redirect("/uploadCV");
+    }
+  })
+};
+
+const getCV = (req,res) => {
+  gfs.files.findOne({ filename: req.user.cv }, (err, file) => {
+    if (!file || file.length === 0) {
+      errors.push("CV has not been uploaded yet");
+      req.flash("errors", errors);
+      res.redirect("/dashboard");
+    }
+   else{
+      const readstream = gfs.createReadStream(file.filename);
+      readstream.pipe(res);
+    }
+  });
+}
+
+module.exports = {
+  uploadProfilePic,
+  uploadCV,
+  insertProfilePic,
+  insertCV,
+  getCV,  
+};

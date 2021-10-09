@@ -10,12 +10,20 @@ const {
   getRegister,
   postLogin,
   postRegister,
+  getresetemail,
+  postresetemail,
+  getresetpassword,
+  postresetpassword,
 } = require("../controllers/auth.controllers");
 
 router.get("/signin", isLoggedIn, getLogin);
 router.post("/signin", isLoggedIn, postLogin);
 router.get("/signup", isLoggedIn, getRegister);
 router.post("/signup", isLoggedIn, postRegister);
+router.get("/resetpassword", ensureAuthenticated, getresetpassword);
+router.post("/resetpassword", ensureAuthenticated, postresetpassword);
+router.get("/resetemail", ensureAuthenticated, getresetemail);
+router.post("/resetemail", ensureAuthenticated, postresetemail);
 router.get("/signout", (req, res) => {
   req.logout();
   res.redirect("/");
