@@ -181,7 +181,7 @@ const postresetpassword = (req, res) => {
 
   if (errors.length > 0) {
     req.flash("errors", errors);
-    res.redirect(req.get('referer'));
+    res.redirect("/resetpassword");
   } else { 
     const otp = between(1000, 9999);
     const stringOTP = num.toString(otp);
@@ -269,6 +269,83 @@ const postresetemail = (req, res) => {
   }
 }
 
+const getforgotpassword = (req,res) =>{
+  res.render("auth/forgotpassmail.ejs", { errors: req.flash("errors"), req: req });
+}
+
+const postforgotpassword = (req,res) =>{
+  const errors = [];
+  const{
+    email
+  } = req.body;
+
+  User.findOne({ email: email }).then((user) => {
+    if (user) {
+      errors.push("Please type a new password");
+      req.flash("errors", errors);
+      res.render("auth/forgotpasspass.ejs", { email:email, errors:req.flash("errors"), req:req });
+    } else {
+      errors.push("User doesn't exists");
+      req.flash("errors", errors);
+      res.redirect("/forgotpassword");
+    }
+  });
+}
+
+const postforgotpasspass = (req,res) =>{
+  const errors = [];
+  const{
+    new_password,
+    confirm_password,
+    email,
+  } = req.body;
+
+  if (new_password.length < 6) {
+    errors.push("Password must be at least 6 characters!");
+  }
+  if (new_password !== confirm_password) {
+    errors.push("Passwords do not match!");
+  }
+
+
+  if (errors.length > 0) {
+    req.flash("errors", errors);
+    res.redirect(req.get('referer'));
+  } else { 
+    const otp = between(1000, 9999);
+    const stringOTP = num.toString(otp);
+    const otpcode = sha1(stringOTP);
+
+    User.findOne({email: email})
+    .then((user)=>{
+      user.otpcode = otpcode;
+      user.otpcodetime = new Date().getTime() + 300000;
+      user
+      .save()
+
+      const options = {
+        from: process.env.MailAddress, 
+        to: email,
+        subject: "Verify your Email, RandomJobs",
+        html: "<h2>Hi "+`${user.name}`+"!</h2><br>Please insert the below code for your email verification: <b>"+`${otp}`+"</b>",
+      }
+
+      transporter.sendMail(options, (err, info) => {
+        if(err){
+          errors.push("Something is wrong, Please try again!");
+          req.flash("errors", errors);
+          res.redirect("/forgotpassword");
+        } else {
+          errors.push("Please verify your email!");
+          req.flash("errors", errors);
+          res.render("otp/verifyotpforgotpass.ejs", { email:email, password:new_password, req : req,error: req.flash("errors")});
+        } 
+      });
+    });
+  }
+   
+}
+
 
 module.exports = {
   getLogin,
@@ -279,4 +356,7 @@ module.exports = {
   postresetpassword,
   getresetemail,
   postresetemail,
+  getforgotpassword,
+  postforgotpassword,
+  postforgotpasspass,
 };

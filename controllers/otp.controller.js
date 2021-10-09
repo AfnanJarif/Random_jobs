@@ -172,9 +172,75 @@ const postverifyotpemail = (req, res) => {
     }); 
 }
 
+const postverifyotpforgotpass = (req, res) =>{
+    const {
+        otp,
+        password,
+        email, 
+    } = req.body;
+
+    const stringOTP = num.toString(otp);
+    const encodeotp = sha1(stringOTP);
+    User.findOne({email : email}).then((user) => {
+        if(user){
+            const errors = [];
+            const userotp = user.otpcode;
+            const diff = new Date().getTime() - user.otpcodetime;
+
+            if(diff < 0){
+                if(encodeotp == userotp){
+                    bcrypt.genSalt(10, (err, salt) => {
+                        if (err) {
+                          errors.push(err);
+                          req.flash("errors", errors);
+                          res.redirect("/forgotpassword");
+                        } else {
+                          bcrypt.hash(password, salt, (err, hash) => {
+                            if (err) {
+                              errors.push(err);
+                              req.flash("errors", errors);
+                              res.redirect("/forgotpassword");
+                            } else {
+                              User.findOne({email:email})
+                              .then((user)=>{
+                                user.password = hash;
+                                user
+                                .save()
+                              })
+                              .catch((err) =>{
+                                  if(err){
+                                    errors.push("Error in saving the new password!");
+                                    req.flash("errors", errors);
+                                    res.redirect("/forgotpassword");
+                                  }
+                              });
+
+                              req.logout();
+                              errors.push("Your password has been chaged Successfully. Please Sign In again!");
+                              req.flash("errors", errors);
+                              res.redirect("/signin");
+                            }
+                          });
+                        }
+                    });
+                } else {
+                    errors.push("Code doesn't match! Try again.");
+                    req.flash("errors", errors);
+                    res.redirect("/forgotpassword");
+                }
+            } 
+            else {
+                errors.push("Timed out for inserting the code, Please try again");
+                req.flash("errors", errors);
+                res.redirect("/forgotpassword");
+            }
+        }
+    }); 
+}
 
 module.exports = {
     postverifyotp,
     postverifyotppass,
     postverifyotpemail,
+    postverifyotpforgotpass,
 }

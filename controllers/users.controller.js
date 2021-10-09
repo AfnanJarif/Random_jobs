@@ -11,7 +11,7 @@ conn.once('open', () => {
 });
 
 const getDashboard = (req, res) => {
-    const errors = [];
+   
     res.render("users/dashboard.ejs", { req: req, user:req.user });
    
 }
