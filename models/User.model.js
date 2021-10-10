@@ -29,28 +29,24 @@ const UserSchema = new mongoose.Schema({
   },
   userOccupation: {
       type: String,
-      required: true,
   },
   age: {
     type: Number,
-    required: true
   },
   address: {
       street:{
         type: String,
-        required: false,
       },
       thana: {
           type: String,
-          required: true,
       },
       district: {
           type: String,
-          required: true,
       }
   },
   description:{
     type: String,
+    deafult: null,
   },
   jobs:[{
     type: String,

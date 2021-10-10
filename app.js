@@ -6,6 +6,9 @@ const flash = require("connect-flash");
 const mongoose = require("mongoose");
 const passport = require("passport");
 
+const methodOverride = require('method-override');
+const bodyParser = require('body-parser');
+
 //Passport Strategy
 require("./config/passport")(passport);
 
@@ -24,6 +27,10 @@ mongoose
   
 //Static Resources
 app.use(express.static("public"));
+//Middleware
+app.use(bodyParser.json());
+app.use(methodOverride('_method'))
+
 //View Engine
 app.set("view engine", "ejs");
 

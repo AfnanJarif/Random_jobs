@@ -16,9 +16,10 @@ font-size:15px;
 color:#636e7b;
 }
 section{
-padding:70px 0px 60px 0px;
+padding:50px 0px 50px 0px;
 }
 h1, h2, h3, h4, h5, h6 {
+    color:#242c36;
     margin: 0 0 15px 0;
     letter-spacing: 1px;
     font-weight: bold;
@@ -105,7 +106,7 @@ padding:0;
 }
 .main-banner fieldset select.selectpicker, .main-banner fieldset .form-control, .main-banner fieldset .seub-btn {
 width: 100%;
-color: #6b797c;
+color: #098fad;
 padding: 19px 15px;
 border: none;
 border-radius: 0;
@@ -1006,7 +1007,7 @@ bottom:0;
 left:0;
 right:0;
 position:absolute;
-background:rgba(12,20,25,0.7);
+background:rgba(2, 85, 136, 0.7);
 }
 
 /*------------------footer design-------------------------*/

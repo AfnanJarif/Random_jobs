@@ -46,18 +46,14 @@ const postRegister = (req, res) => {
     email, 
     usertype, 
     phone, 
-    age, 
-    thana,
-    district,
     password, 
     confirm_password,
-    userOccupation
    } = req.body;
 
   //Data Validation
   const errors = [];
 
-  if (!name || !email || !password || !confirm_password || !usertype || !phone || !userOccupation || !thana || !district) {
+  if (!name || !email || !password || !confirm_password || !usertype || !phone) {
     errors.push("All fields are required!");
   }
   if (password.length < 6) {
@@ -100,17 +96,11 @@ const postRegister = (req, res) => {
                 
                 //constructing new user
                 const newUser = new User({
-                  address: {
-                    thana: thana, 
-                    district: district,
-                  },
                   name: name,
-                  email: email,
-                  password: hash,
                   usertype: usertype, 
-                  phone: phone, 
-                  userOccupation: userOccupation,
-                  age: age,
+                  email: email,
+                  phone: phone,
+                  password: hash, 
                   otpcode: otpcode,
                   otpcodetime: new Date().getTime() + 300000,
                 });
