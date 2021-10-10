@@ -1,0 +1,82 @@
+<%- include('../partials/head.ejs') %>
+<title>Profile | Random Jobs</title>
+<%- include('../partials/navprofilepages.ejs') %>
+
+
+
+<!-- Main jumbotron for a primary marketing message or call to action -->
+<section class="inner-banner">
+    <div class="container">
+        <div class="caption">
+            <text color:"#ffffff" style="font-size: 45px"><%= req.user.name %></text>
+            <p><%= req.user.userOccupation %></p>
+        </div>
+    </div>
+</section>
+
+
+<section class="profile-detail">
+    <div class="container">
+        <div class="col-md-12">
+            <div class="row">
+                <div class="basic-information">
+                    <div class = row>
+                        <div class="col-md-3 col-sm-3"></div>
+                        <div style ="text-align:center" class="col-md-6 col-sm-6">
+                            <%if(errors.length>0){if(errors=="Profile has been updated!"){%>
+                                <div class="alert alert-success"><%=errors%></div>
+                            <%}else if(errors=="Description has been updated!"){%>
+                                <div class="alert alert-success"><%=errors%></div>
+                            <%}else{%>
+                                <div class="alert alert-danger"><%=errors%></div>
+                            <%}%><%}%>
+                        </div>
+                        <div class="col-md-3 col-sm-3"></div>
+                    </div>
+                    <div class="col-md-3 col-sm-3">
+                    <!-- <img src="img/user.jpg" alt="" class="img-responsive"> -->
+                    </div>
+                    <div class="col-md-9 col-sm-9">
+                        <div class="profile-content">
+                            <ul class="information">
+                                <li><span>Name:</span><%= req.user.name %></li>
+                                <li><span>Email:</span><%= req.user.email %></li>
+                                <li><span>Phone:</span><%= req.user.phone %></li>
+                                <li><span>Age:</span><%= req.user.age %></li>
+                                <li><span>User Type:</span><%= req.user.usertype %></li>
+                                <li><h5>Address</h5></li>
+                                <li><span>Street:</span><%= req.user.address.street %></li>
+                                <li><span>Thana:</span><%= req.user.address.thana %></li>
+                                <li><span>District:</span><%= req.user.address.district %></li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div>
+                </br>
+                </br>
+            </div>
+            <div class="row">
+                <div class="col-md-12 col-sm-12">
+                    <h5>Description</h5>
+                    <p><%= req.user.description %></p>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-md-12 col-sm-12">
+                    <ul class="social">
+                        <%if (req.user.linkedin != null){%>
+                            <li><a href="<%= user.linkedin %>" class="linkedin"><i class="fa fa-linkedin"></i>Linked In</a></li>
+                        <%}%>
+                        <%if (req.user.facebook != null){%>
+                            <li><a href="<%= user.facebook %>" class="facebook"><i class="fa fa-facebook"></i>Facebook</a></li>
+                        <%}%>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<%- include('../partials/footer.ejs') %>	

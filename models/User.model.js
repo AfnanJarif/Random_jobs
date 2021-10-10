@@ -49,7 +49,7 @@ const UserSchema = new mongoose.Schema({
           required: true,
       }
   },
-  details:{
+  description:{
     type: String,
   },
   jobs:[{
@@ -75,6 +75,14 @@ const UserSchema = new mongoose.Schema({
     type: String,
     default: null,
   },
+  linkedin:{
+    type: String,
+    default: null,
+  },
+  facebook:{
+    type: String,
+    default: null,
+  }
 });
 
 const User = mongoose.model("User", UserSchema);
