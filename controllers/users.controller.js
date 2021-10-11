@@ -94,8 +94,8 @@ const posteditprofile = (req, res) =>{
       }  
     }).catch(()=>{
       req.logout();
-      errors.push("User doesn't exits!");
-      req.flash("errors", errors);
+      let error="User doesn't exits!";
+      req.flash("error", error);
       res.redirect("/signin");
     });
   }
@@ -135,8 +135,8 @@ const posteditdescription = (req,res) => {
     }  
   }).catch(()=>{
     req.logout();
-    errors.push("User doesn't exits!");
-    req.flash("errors", errors);
+    let error="User doesn't exits!";
+    req.flash("error", error);
     res.redirect("/signin");
   });
 }
@@ -176,8 +176,8 @@ const insertProfilePicname = (req, res) => {
     })
   }).catch(() => {
     req.logout();
-    errors.push("User doesn't exits!");
-    req.flash("errors", errors);
+    let error="User doesn't exits!";
+    req.flash("error", error);
     res.redirect("/signin");
   });
 }
@@ -229,8 +229,8 @@ const insertCVfilename = (req, res) => {
     })
   }).catch(() => {
     req.logout();
-    errors.push("User doesn't exits!");
-    req.flash("errors", errors);
+    let error="User doesn't exits!";
+    req.flash("error", error);
     res.redirect("/signin");
   });;
 }

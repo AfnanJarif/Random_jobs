@@ -1,10 +1,12 @@
 require("dotenv").config();
 const User = require("../models/User.model");
+const OTP = require("../models/otp.model");
 const bcrypt = require("bcryptjs");
 const passport = require("passport");
 const nodemailer = require("nodemailer");
 const sha1 = require("sha1");
 const num = require("num");
+const emailExistence = require('email-existence');
 
 function between(min, max) {  
     return Math.floor(
@@ -21,10 +23,9 @@ const transporter = nodemailer.createTransport({
 });
 
 
-
 //Authentication
 const getLogin = (req, res) => {
-  res.render("auth/signin.ejs", { error: req.flash("errors"), req: req });
+  res.render("auth/signin.ejs", { error: req.flash("error"), req: req });
 };
 
 const postLogin = (req, res, next) => {
@@ -48,7 +49,7 @@ const postRegister = (req, res) => {
     phone, 
     password, 
     confirm_password,
-   } = req.body;
+  } = req.body;
 
   //Data Validation
   const errors = [];
@@ -63,87 +64,61 @@ const postRegister = (req, res) => {
     errors.push("Passwords do not match!");
   }
 
+  if(isNaN(phone)){
+    errors.push("Phone can't be text!");
+  }
+
   if (errors.length > 0) {
     req.flash("errors", errors);
     res.redirect("/signup");
   } else {
-
-    //Checking if the user exists
-    User.findOne({ email: email }).then((user) => {
+    User.findOne({ email: email })
+    .then((user) => {
       if (user) {
         errors.push("User already exists with this email!");
         req.flash("errors", errors);
         res.redirect("/signup");
       } else {
-
-        //hashing password
         const otp = between(1000, 9999);
         const stringOTP = num.toString(otp);
         const otpcode = sha1(stringOTP);
+        
+        const newotp = new OTP({
+          otpcode: otpcode,
+          otpcodetime: new Date().getTime() + 300000,
+        });
 
-        bcrypt.genSalt(10, (err, salt) => {
-          if (err) {
-            errors.push(err);
-            req.flash("errors", errors);
-            res.redirect("/signup");
-          } else {
-            bcrypt.hash(password, salt, (err, hash) => {
-              if (err) {
-                errors.push(err);
-                req.flash("errors", errors);
-                res.redirect("/signup");
-              } else {   
-                
-                //constructing new user
-                const newUser = new User({
-                  name: name,
-                  usertype: usertype, 
-                  email: email,
-                  phone: phone,
-                  password: hash, 
-                  otpcode: otpcode,
-                  otpcodetime: new Date().getTime() + 300000,
-                });
-                newUser
-                  .save()
-                  .then(() => {
-                    
-                    const options = {
-                      from: process.env.MailAddress, 
-                      to: newUser.email,
-                      subject: "Verify your Email, RandomJobs",
-                      html: "<h2>Hi "+`${newUser.name}`+"!</h2><br>Please insert the below code for your email verification: <b>"+`${otp}`+"</b>",
-                    }
-              
-                    transporter.sendMail(options, (err, info) => {
-                      if(err){
-                        errors.push("Your Provided Email doesn't exists, Please Sign Up again!");
-                        req.flash("errors", errors);
-            
-                        User.deleteOne({ _id: newUser._id })
-                        .catch((err) => {
-                            if(err){
-                                let error = "Something in the server is wrong, Please try one more time.";
-                                console.log(error);
-                                res.redirect("/signup");
-                            }
-                        });
-                        res.redirect("/signup");
-                      } else {
-                        res.render("otp/verifyotp.ejs", { email: email, req : req,error: req.flash("errors")});
-                      }
-                    });
-                  })
-                  .catch(() => {
-                    errors.push("Saving User to the database failed!");
-                    req.flash("errors", errors);
-                    res.redirect("/signup");
-                  });
-                }
-            });
+        newotp
+        .save()
+        .then(()=>{
+          const options = {
+            from: process.env.MailAddress, 
+            to: email,
+            subject: "Verify your Email, RandomJobs",
+            html: "<h2>Hi "+`${name}`+"!</h2><br>Please insert the below code within 5 minutes for your email verification: <b>"+`${otp}`+"</b>",
           }
+    
+          transporter.sendMail(options, (err, info) => {
+            if(err){
+              console.log(`${err}`);
+              errors.push("Your Provided Email doesn't exists, Please Sign Up again!");
+              req.flash("errors", errors);
+              res.redirect("/signup");
+            } else {
+              res.render("otp/verifyotp.ejs", { otpid:newotp._id, name: name, email: email, password: password, usertype:usertype, phone:phone, req : req,error: req.flash("errors")});
+            }
+          })
+        })
+        .catch((err)=>{
+          console.log(`${err}`);
         });
       }
+    })
+    .catch((err)=>{
+      console.log(`${err}`);
+      errors.push("User already exists with this email!");
+      req.flash("errors", errors);
+      res.redirect("/signup");
     });
   }
 };
@@ -189,7 +164,7 @@ const postresetpassword = (req, res) => {
       from: process.env.MailAddress, 
       to: req.user.email,
       subject: "Verify your Email, RandomJobs",
-      html: "<h2>Hi "+`${req.user.name}`+"!</h2><br>Please insert the below code for your email verification: <b>"+`${otp}`+"</b>",
+      html: "<h2>Hi "+`${req.user.name}`+"!</h2><br>Please insert the below code within 5 minutes for your email verification: <b>"+`${otp}`+"</b>",
     }
 
     transporter.sendMail(options, (err, info) => {
@@ -242,7 +217,7 @@ const postresetemail = (req, res) => {
       from: process.env.MailAddress, 
       to: new_email,
       subject: "Verify your Email, RandomJobs",
-      html: "<h2>Hi "+`${req.user.name}`+"!</h2><br>Please insert the below code for your email verification: <b>"+`${otp}`+"</b>",
+      html: "<h2>Hi "+`${req.user.name}`+"!</h2><br>Please insert the below code within 5 minutes for your email verification: <b>"+`${otp}`+"</b>",
     }
 
     transporter.sendMail(options, (err, info) => {
@@ -317,7 +292,7 @@ const postforgotpasspass = (req,res) =>{
         from: process.env.MailAddress, 
         to: email,
         subject: "Verify your Email, RandomJobs",
-        html: "<h2>Hi "+`${user.name}`+"!</h2><br>Please insert the below code for your email verification: <b>"+`${otp}`+"</b>",
+        html: "<h2>Hi "+`${user.name}`+"!</h2><br>Please insert the below code within 5 minutes for your email verification: <b>"+`${otp}`+"</b>",
       }
 
       transporter.sendMail(options, (err, info) => {

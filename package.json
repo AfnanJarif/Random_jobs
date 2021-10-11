@@ -14,8 +14,10 @@
     "body-parser": "^1.19.0",
     "connect-flash": "^0.1.1",
     "crypto": "^1.0.1",
+    "deep-email-validator": "^0.1.18",
     "dotenv": "^10.0.0",
     "ejs": "^3.1.6",
+    "email-existence": "^0.1.6",
     "express": "^4.17.1",
     "express-session": "^1.17.2",
     "gridfs-stream": "^1.1.1",
@@ -29,7 +31,8 @@
     "passport": "^0.4.1",
     "passport-local": "^1.0.0",
     "path": "^0.12.7",
-    "sha1": "^1.1.1"
+    "sha1": "^1.1.1",
+    "sync": "^0.2.5"
   },
   "repository": {
     "type": "git",
