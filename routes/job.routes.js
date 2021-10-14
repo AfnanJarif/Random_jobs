@@ -18,9 +18,10 @@ const {
   isRecruiterdashboard, 
 } = require("./../middlewares/isRecruiter.middleware");
 const {
+  getjobdocument,
+  getjobdescription,
   getJobCreation,
   postJobCreation,
-  getJob,
   jobRequests,
   jobAssigned,
   jobDone
@@ -60,9 +61,11 @@ const storage = new GridFsStorage({
 const upload = multer({ storage });
 
 
+router.get("/job/jobdocument/:id", ensureAuthenticated, isRecruiter, getjobdocument);
+router.get("/job/:id", ensureAuthenticated, isRecruiter, getjobdescription);
+router.get("/jobdescription", ensureAuthenticated, isRecruiter, )
 router.get("/jobcreation", ensureAuthenticated, isRecruiter, getJobCreation);
 router.post("/jobcreation", ensureAuthenticated, isRecruiter, upload.single('file'), postJobCreation);
-router.get("/recruiterdashboard",ensureAuthenticated, isRecruiter, getJob);
 router.post("/jobRequests", jobRequests);
 router.post("/jobAssigned", jobAssigned);
 router.post("/jobDone", jobDone);

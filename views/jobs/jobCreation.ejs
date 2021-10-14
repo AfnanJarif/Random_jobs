@@ -45,11 +45,11 @@
 								<option value="freelancing">Freelancing</option>
 								<option value="internship">Internship</option>
 							</select>
-							<input type="date" class="form-control input-lg" name="startdate"  required>
-							<input type="date" class="form-control input-lg" name="enddate" required>
+							<input type="date" class="form-control input-lg" name="startdate" placeholder="Start Date" required>
+							<input type="date" class="form-control input-lg" name="enddate"  placeholder="End Date" required>
 							<input type="text" class="form-control input-lg" name="union" placeholder="Union" required>
 							<input type="text" class="form-control input-lg" name="thana" placeholder="Thana" required>
-							<input type="text" class="form-control input-lg" name="district" placeholder="District" value="<%=req.user.address.district%>" required>
+							<input type="text" class="form-control input-lg" name="district" placeholder="District" required>
 							<input type="number" class="form-control input-lg" name="payment" placeholder="Payment" required>
 							<textarea class="form-control" rows = "5" cols = "60" name = "jobdescription" placeholder="Write Detailed Information"></textarea>
 							<input type="file" name="file" id="file" class="custom-file-input">

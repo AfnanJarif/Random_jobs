@@ -1,5 +1,19 @@
-const Job = require('../models/job.model')
+
+require("dotenv").config();
 const User = require("../models/User.model");
+const Job = require('../models/job.model');
+
+const bcrypt = require("bcryptjs");
+const mongoose = require('mongoose');
+const Grid = require('gridfs-stream');
+
+const conn = mongoose.createConnection(process.env.MongoURI);
+let gfs;
+
+conn.once('open', () => {
+  gfs = Grid(conn.db, mongoose.mongo);
+  gfs.collection('uploads');
+});
 
 const getJobCreation = (req, res) => {
     res.render("jobs/jobCreation.ejs", { errors: req.flash("errors"), req: req });
@@ -58,12 +72,14 @@ const postJobCreation = (req, res) => {
             req.flush("erros", errors);
             res.redirect("/jobcreation");
           }
+
+          console.log(Data);
   
           if (data) {
             User.findOneAndUpdate(
               { _id: req.user._id },
               {
-                $push: {jobs : data._id },
+                $push: {jobs : data},
               },
               {
                 new: true,
@@ -93,23 +109,18 @@ const postJobCreation = (req, res) => {
   }
 }
 
-const getJob = (req, res) => {
-  const jobs = [];
+const getjobdescription = (req, res) => {
 
-  User.findById(req.user._id).exec((error, user) => {
-    if(user){
-      for(var i = 0; i < user.jobs.length; i++){
-        Job.findById(user.jobs[i]).exec((error, data) => {
-          if(data){
-            jobs.push(data);
-          }   
-          if(i == user.jobs.length){
-            res.render("jobs/job.ejs", {jobs: jobs, req: req});  
-          }
-        }); 
-      }
-    }
-  });  
+  const id = req.params.id;
+
+  Job.findOne({_id: id})
+  .then((job) =>{
+    res.render("jobs/job.ejs", {job: job, req: req});
+  })
+  .catch((err)=>{
+    console.log(err);
+  })
+  
 }
 
 const jobRequests = (req,res) => {
@@ -183,10 +194,34 @@ const jobDone = (req,res) => {
   });
 }
 
+const getjobdocument = (req, res) =>{
+  const id = req.params.id;
+
+  Job.findOne({_id: id})
+  .then((job) =>{
+    gfs.files.findOne({ filename: job.document }, (err, file) => {
+      if (!file || file.length === 0) {
+        res.redirect("/dashboard");
+      }
+     else{
+        const readstream = gfs.createReadStream(file.filename);
+        readstream.pipe(res);
+      }
+    });
+  })
+  .catch((err)=>{
+    console.log(err);
+  })
+
+
+  
+}
+
 module.exports = {
+  getjobdocument,
   getJobCreation, 
-  postJobCreation, 
-  getJob,
+  postJobCreation,
+  getjobdescription,
   jobRequests,
   jobAssigned,
   jobDone

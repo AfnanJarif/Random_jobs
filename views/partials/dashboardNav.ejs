@@ -32,11 +32,11 @@
                                 <li><a href="resume.html">Resume Detail</a></li> -->
                             </ul>
                         </li>
-                        <%if (req.user.usertype == "recruiter"){%>
-                            <li><a href="/jobCreation">Post a Job</a></li>
-                        <%}%>
                         <%if (req.isAuthenticated()){%>
                             <li><a href="/signout">Sign Out</a></li>
+                        <%}%>
+                        <%if (req.user.usertype == "recruiter"){%>
+                            <li><a href="/jobCreation">Post a Job</a></li>
                         <%}%>
                     </ul>
             </div><!-- /.navbar-collapse -->

@@ -16,17 +16,26 @@ conn.once('open', () => {
 
 const getDashboard = (req, res) => {
   if(req.user.usertype == "recruiter"){
-    const jobs = [];
-    var i = 0
-
     User.findById(req.user._id).exec( (error, user) => {
-      if(user)
-      {
-        Job.findById(user.jobs[2]).exec((error, data) => {
-          if(data)
-          console.log(data);
-            res.render("users/dashboard.ejs", { req: req, user:req.user });
-        });
+      if(user){
+        const jobs = [];
+        var i = 0
+        length = user.jobs.length;
+        for(; i < user.jobs.length; i++){
+          Job.findById(user.jobs[i]).exec((error, data) => {
+            if(data){
+              jobs.push(data);
+            }
+
+            if(i == user.jobs.length){
+              length += 1;
+              if(length == user.jobs.length*2){
+                res.render("jobs/jobhistory.ejs", {jobs: jobs, req: req});  
+              }
+            }
+          });
+        }
+        
       }
     });  
   } else {
@@ -72,6 +81,9 @@ const posteditprofile = (req, res) =>{
   const errors = [];
   if (!name || !usertype || !phone || !age || !street || !thana || !district  || !userOccupation || !password) {
     errors.push("All fields are required!");
+  }
+  if ( usertype != "recruiter" &&  usertype != "jobseeker") {
+    errors.push("Please select a User Type!");
   }
 
   if (errors.length > 0) {

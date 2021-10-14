@@ -51,11 +51,14 @@ const postRegister = (req, res) => {
     confirm_password,
   } = req.body;
 
-  //Data Validation
+ 
   const errors = [];
 
   if (!name || !email || !password || !confirm_password || !usertype || !phone) {
     errors.push("All fields are required!");
+  }
+  if ( usertype != "recruiter" && usertype != "jobseeker") {
+    errors.push("Please select a User Type!");
   }
   if (password.length < 6) {
     errors.push("Password must be at least 6 characters!");
@@ -68,59 +71,67 @@ const postRegister = (req, res) => {
     errors.push("Phone can't be text!");
   }
 
-  if (errors.length > 0) {
-    req.flash("errors", errors);
-    res.redirect("/signup");
-  } else {
-    User.findOne({ email: email })
-    .then((user) => {
-      if (user) {
-        errors.push("User already exists with this email!");
+  emailExistence.check(email, function(error, response){
+    if(response){
+      if (errors.length > 0) {
         req.flash("errors", errors);
         res.redirect("/signup");
       } else {
-        const otp = between(1000, 9999);
-        const stringOTP = num.toString(otp);
-        const otpcode = sha1(stringOTP);
-        
-        const newotp = new OTP({
-          otpcode: otpcode,
-          otpcodetime: new Date().getTime() + 300000,
-        });
-
-        newotp
-        .save()
-        .then(()=>{
-          const options = {
-            from: process.env.MailAddress, 
-            to: email,
-            subject: "Verify your Email, RandomJobs",
-            html: "<h2>Hi "+`${name}`+"!</h2><br>Please insert the below code within 5 minutes for your email verification: <b>"+`${otp}`+"</b>",
-          }
+        User.findOne({ email: email })
+        .then((user) => {
+          if (user) {
+            errors.push("User already exists with this email!");
+            req.flash("errors", errors);
+            res.redirect("/signup");
+          } else {
+            const otp = between(1000, 9999);
+            const stringOTP = num.toString(otp);
+            const otpcode = sha1(stringOTP);
+            
+            const newotp = new OTP({
+              otpcode: otpcode,
+              otpcodetime: new Date().getTime() + 300000,
+            });
     
-          transporter.sendMail(options, (err, info) => {
-            if(err){
+            newotp
+            .save()
+            .then(()=>{
+              const options = {
+                from: process.env.MailAddress, 
+                to: email,
+                subject: "Verify your Email, RandomJobs",
+                html: "<h2>Hi "+`${name}`+"!</h2><br>Please insert the below code within 5 minutes for your email verification: <b>"+`${otp}`+"</b>",
+              }
+        
+              transporter.sendMail(options, (err, info) => {
+                if(err){
+                  console.log(`${err}`);
+                  errors.push("Your Provided Email doesn't exists, Please Sign Up again!");
+                  req.flash("errors", errors);
+                  res.redirect("/signup");
+                } else {
+                  res.render("otp/verifyotp.ejs", { otpid:newotp._id, name: name, email: email, password: password, usertype:usertype, phone:phone, req : req,error: req.flash("errors")});
+                }
+              })
+            })
+            .catch((err)=>{
               console.log(`${err}`);
-              errors.push("Your Provided Email doesn't exists, Please Sign Up again!");
-              req.flash("errors", errors);
-              res.redirect("/signup");
-            } else {
-              res.render("otp/verifyotp.ejs", { otpid:newotp._id, name: name, email: email, password: password, usertype:usertype, phone:phone, req : req,error: req.flash("errors")});
-            }
-          })
+            });
+          }
         })
         .catch((err)=>{
           console.log(`${err}`);
+          errors.push("User already exists with this email!");
+          req.flash("errors", errors);
+          res.redirect("/signup");
         });
       }
-    })
-    .catch((err)=>{
-      console.log(`${err}`);
-      errors.push("User already exists with this email!");
+    } else {
+      errors.push("Please enter a valid Email!");
       req.flash("errors", errors);
       res.redirect("/signup");
-    });
-  }
+    }
+  });
 };
 
 const getresetpassword = (req, res) => {
