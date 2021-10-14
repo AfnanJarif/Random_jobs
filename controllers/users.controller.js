@@ -25,7 +25,7 @@ const getDashboard = (req, res) => {
         Job.findById(user.jobs[2]).exec((error, data) => {
           if(data)
           console.log(data);
-            res.render("jobs/job.ejs", {job: data, req: req});  
+            res.render("users/dashboard.ejs", { req: req, user:req.user });
         });
       }
     });  

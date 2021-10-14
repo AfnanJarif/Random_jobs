@@ -162,13 +162,16 @@ const postverifyotpemail = (req, res) => {
                     })                   
                     .catch((err) =>{
                         if(err){
-                        
+                            req.logout();
+                            let error = "Request altered!";
+                            req.flash("errors", error);
+                            res.redirect("/signin");
                         }
                     });
 
                     req.logout();
                     let error = "Your email has been chaged Successfully. Please Sign In again!";
-                    req.flash("errors", errors);
+                    req.flash("errors", error);
                     res.redirect("/signin");
                 } else {
                     errors.push("Code doesn't match! Try again.");
