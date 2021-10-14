@@ -1,5 +1,7 @@
 require("dotenv").config();
 const User = require("../models/User.model");
+const Job = require('../models/job.model');
+
 const bcrypt = require("bcryptjs");
 const mongoose = require('mongoose');
 const Grid = require('gridfs-stream');
@@ -13,7 +15,23 @@ conn.once('open', () => {
 });
 
 const getDashboard = (req, res) => {
-  res.render("users/dashboard.ejs", { req: req, user:req.user });
+  if(req.user.usertype == "recruiter"){
+    const jobs = [];
+    var i = 0
+
+    User.findById(req.user._id).exec( (error, user) => {
+      if(user)
+      {
+        Job.findById(user.jobs[2]).exec((error, data) => {
+          if(data)
+          console.log(data);
+            res.render("jobs/job.ejs", {job: data, req: req});  
+        });
+      }
+    });  
+  } else {
+    res.render("users/dashboard.ejs", { req: req, user:req.user });
+  }
 }
 
 

@@ -13,13 +13,11 @@ const {
     ensureAuthenticated
 } = require("./../middlewares/auth.middleware");
 
-/*const {
-    uploadProfilePic,
-    uploadCV,
-    insertProfilePic,
-    insertCV,
-    getCV,  
-} = require("./../controllers/upload.controller");*/
+
+const {
+    isRecruiter,
+    isRecruiterdashboard,
+} = require("./../middlewares/isRecruiter.middleware");
 
 const {
     getDashboard,

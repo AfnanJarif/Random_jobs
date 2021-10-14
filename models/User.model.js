@@ -44,9 +44,12 @@ const UserSchema = new mongoose.Schema({
           type: String,
       }
   },
-  description:{
+  description: {
     type: String,
     deafult: null,
+  },
+  interests: {
+    type: String,
   },
   jobs:[{
     type: String,
@@ -57,25 +60,25 @@ const UserSchema = new mongoose.Schema({
   ratingID: {
     type: String,
   },
-  otpcode:{
+  otpcode: {
     type: String,
   },
-  otpcodetime:{
+  otpcodetime: {
     type: Date,
   },
-  profilepic:{
+  profilepic: {
     type: String,
     default: null,
   },
-  cv:{
+  cv: {
     type: String,
     default: null,
   },
-  linkedin:{
+  linkedin: {
     type: String,
     default: null,
   },
-  facebook:{
+  facebook: {
     type: String,
     default: null,
   }

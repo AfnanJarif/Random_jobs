@@ -6,21 +6,57 @@ const getJobCreation = (req, res) => {
 }
 
 const postJobCreation = (req, res) => {
-    const {name, category, jobtype, jobdescription, payment } = req.body;
+  const errors = [];
 
+  const {
+    name, 
+    category, 
+    jobtype, 
+    startdate,
+    enddate,
+    union,
+    thana,
+    district,
+    payment, 
+    jobdescription,
+  } = req.body;
+
+  if (!name || !category || !jobtype || !startdate || !enddate || !union || !thana || !district || !payment) {
+    errors.push("All fields are required!");
+  }
+
+  if(isNaN(payment)){
+    errors.push("Payment must be in number!");
+  }
+
+  if(errors>0){
+    req.flush("erros", errors);
+    res.redirect("/jobcreation");
+  } else{
     User.findById(req.user._id).exec(async (error, user) => {
       if(user){
         const newJob = new Job({
           name: name,
+          recruiterID: req.user._id,
           category: category,
           jobtype: jobtype,
-          recruiterID: req.user._id,
-          jobdescription: jobdescription,
+          startdate: startdate,
+          enddate: enddate,
+          location : {
+            union: union,
+            thana: thana,
+            district: district,
+          },          
           payment: payment,
+          jobdescription: jobdescription,
+          document: req.file.filename,
         });
+
         newJob.save((error, data) => {
           if (error) {
-            return res.status(400).json({ error });
+            errors.push("Something is wrong while saving the JOB! Please try again")
+            req.flush("erros", errors);
+            res.redirect("/jobcreation");
           }
   
           if (data) {
@@ -33,34 +69,40 @@ const postJobCreation = (req, res) => {
                 new: true,
               }
             ).exec(async (error, user) => {
-              if (error) return res.status(400).json({ message: error });
+              if (error){
+                req.logout();
+                errors.push("Fabricated request!");
+                req.flush("erros", errors);
+                res.redirect("/signin");
+              }
               if (user) {
                 user
-                  .save()
-                  .then((user) => res.redirect("/dashboard"))
-                  .catch((err) => console.log(err));
-              } else {
-                return res.status(200).json({ message: "no such user" });
+                .save()
+                .then(() => res.redirect("/dashboard"))
+                .catch(() =>{
+                  errors.push("Something is wrong while saving the JOB! Please try again");
+                  req.flush("erros", errors);
+                  res.redirect("/jobcreation");
+                });
               }
             });
           }
         });
       }
     })
+  }
 }
 
 const getJob = (req, res) => {
-
   const jobs = [];
 
   User.findById(req.user._id).exec((error, user) => {
-
     if(user){
       for(var i = 0; i < user.jobs.length; i++){
         Job.findById(user.jobs[i]).exec((error, data) => {
           if(data){
             jobs.push(data);
-          } 
+          }   
           if(i == user.jobs.length){
             res.render("jobs/job.ejs", {jobs: jobs, req: req});  
           }

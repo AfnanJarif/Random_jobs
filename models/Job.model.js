@@ -8,28 +8,36 @@ const JobSchema = new mongoose.Schema({
   recruiterID: {
     type: String,
     required: true,
-},
+  },
   category: {
-      type: String,
-      required: true,
+    type: String,
+    required: true,
   },
   jobdescription:{
     type: String,
     required: true,
   },
-  jobtype:{
+  jobtype: {
     type: String,
     required: true,
   },
-  startdate:{
+  document:{
+    type: String,
+    default: null,
+  },
+  startdate: {
     type: Date,
     required: true,
   },
-  enddate:{
+  enddate: {
     type: Date,
     required: true,
   },
-  location:{
+  location: {
+    union: {
+      type: String,
+      required: true,
+    },
     thana: {
       type: String,
       required: true,
