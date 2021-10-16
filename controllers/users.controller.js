@@ -301,10 +301,28 @@ const getuser = (req,res) => {
 }
 
 const getusercv = (req, res) =>{
-  const id = request.params.id;
+  const id = req.params.id;
   User.findOne({ _id: id })
   .then((user) => {
     if(user){gfs.files.findOne({ filename: user.cv }, (err, file) => {
+      if (!file || file.length === 0) {
+        res.redirect("/dashboard");
+      }
+     else{
+        const readstream = gfs.createReadStream(file.filename);
+        readstream.pipe(res);
+      }
+    });
+    }
+  })
+}
+
+const getuserpic = (req, res) =>{
+  const id = req.params.id;
+
+  User.findOne({ _id: id })
+  .then((user) => {
+    if(user){gfs.files.findOne({ filename: user.profilepic }, (err, file) => {
       if (!file || file.length === 0) {
         res.redirect("/dashboard");
       }
@@ -339,4 +357,5 @@ module.exports = {
 
   getuser,
   getusercv,
+  getuserpic,
 };

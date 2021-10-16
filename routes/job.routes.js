@@ -33,6 +33,7 @@ const {
 const {
   getuser,
   getusercv,
+  getuserpic
 } = require("./../controllers/users.controller");
 
 const conn = mongoose.createConnection(process.env.MongoURI);
@@ -71,19 +72,27 @@ router.get("/postedjobs", ensureAuthenticated, getpostedjobs);
 router.get("/postedjobs/:id", ensureAuthenticated, getpostedjobdetails);
 router.get("/postedjobs/jobdocument/:id", ensureAuthenticated, getjobdocument);
 router.get("/postedjobs/request/:id", ensureAuthenticated, jobrequest);
+router.get("/postedjobs/user/:id", ensureAuthenticated, getuser);
+router.get("/postedjobs/user/usercv/:id", ensureAuthenticated, getusercv);
+router.get("/postedjobs/user/userpic/:id", ensureAuthenticated, getuserpic);
 
 router.get("/requestedjobs", ensureAuthenticated, getrequestedjobs);
 router.get("/requestedjobs/:id", ensureAuthenticated, getdetailedpostedjob);
 router.get("/requestedjobs/jobdocument/:id", ensureAuthenticated, getjobdocument);
 router.get("/requestedjobs/request/:id", ensureAuthenticated, jobrequest);
+router.get("/requestedjobs/user/:id", ensureAuthenticated, getuser);
+router.get("/requestedjobs/user/usercv/:id", ensureAuthenticated, getusercv);
+router.get("/requestedjobs/user/userpic/:id", ensureAuthenticated, getuserpic);
 
 router.get("/yourjobs/:id", ensureAuthenticated, isRecruiter, getjobdescription);
 router.get("/yourjobs/jobdocument/:id", ensureAuthenticated, isRecruiter, getjobdocument);
 router.get("/yourjobs/jobassign/:id&:u_id", ensureAuthenticated, jobAssigned);
 router.get("/yourjobs/jobdone/:id", ensureAuthenticated, isRecruiter, jobDone);
 router.get("/yourjobs/user/:id", ensureAuthenticated, isRecruiter, getuser);
-router.get("/yourjobs/usercv/:id", ensureAuthenticated, isRecruiter, getusercv);
+router.get("/yourjobs/user/usercv/:id", ensureAuthenticated, isRecruiter, getusercv);
+router.get("/yourjobs/user/userpic/:id", ensureAuthenticated, isRecruiter, getuserpic);
 router.get("/yourjobs", ensureAuthenticated, isRecruiter, getyourjobs);
+
 
 router.get("/jobcreation", ensureAuthenticated, isRecruiter, getJobCreation);
 router.post("/jobcreation", ensureAuthenticated, isRecruiter, upload.single('file'), postJobCreation);

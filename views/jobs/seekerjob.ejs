@@ -49,7 +49,8 @@
                        <div class="profile-content"> 
                             <ul class="information">
                                 <li><h5>General Info</h5></li>
-                                <li><span>Recruiter:</span><%= req.user.name %></li>
+                                <% const uURL="user/"+job.recruiter.id%>
+                                <li><span>Recruiter:</span><a href="<%= uURL %>"><text style="font-size: 15px; color:#3a69c0;"><%= job.recruiter.name %></text></a></li>                            
                                 <li><span>Category:</span><%= job.category %></li>
                                 <li><span>Type:</span><%= job.jobtype %></li>
                                 <li><span>Start Date:</span><%= job.startdate %></li>

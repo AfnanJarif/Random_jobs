@@ -63,7 +63,10 @@ const postJobCreation = (req, res) => {
       if(user){
           const newJob = new Job({
           name: name,
-          recruiterID: req.user._id,
+          recruiter: {
+            id: user._id,
+            name: user.name,
+          },
           category: category,
           jobtype: jobtype,
           startdate: new Date(startdate),
@@ -343,11 +346,19 @@ const getjobdocument = (req, res) =>{
 
 const getpostedjobs = (req, res) =>{
   Job.find({
+    startdate:{
+      $gte: Date.now(),
+      $lt: new Date("2300-04-30T00:00:00.000Z"),
+    },
+    enddate:{
+      $gte: Date.now(),
+      $lt: new Date("2300-04-30T00:00:00.000Z"),
+    }
   })
   .then((jobs)=>{
     if(jobs){
       function custom_sort(a, b) {
-        return (new Date(a.startdate).getTime() - new Date(b.startdate).getTime());
+        return -1*(new Date(a.date).getTime() - new Date(b.date).getTime());
       }
       jobs.sort(custom_sort);
       res.render("jobs/postedjobs.ejs", {jobs: jobs, errors : req.flash("errors"), req: req});
@@ -407,7 +418,7 @@ const getrequestedjobs = (req,res) =>{
               length += 1;
               if(length == user.requestedjobs.length){
                 function custom_sort(a, b) {
-                  return (new Date(a.startdate).getTime() - new Date(b.startdate).getTime());
+                  return -1*(new Date(a.date).getTime() - new Date(b.date).getTime());
                 }
                 jobs.sort(custom_sort);
                 res.render("jobs/requestedjobs.ejs", {jobs: jobs, req: req});  

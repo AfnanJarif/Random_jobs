@@ -48,6 +48,11 @@ const postverifyotp = (req, res) => {
                                         let error = "Your account have been created Successfully. Please Sign In!";
                                         req.flash("error", error);
                                         res.redirect("/signin");
+                                    })
+                                    .catch(()=>{
+                                        let error = "Your Phone Number has been used with another account. Please provide a new one!";
+                                        req.flash("errors", error);
+                                        res.redirect("/signup");
                                     });
                                 }    
                             });
