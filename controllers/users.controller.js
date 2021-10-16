@@ -6,6 +6,15 @@ const bcrypt = require("bcryptjs");
 const mongoose = require('mongoose');
 const Grid = require('gridfs-stream');
 
+const nodemailer = require("nodemailer");
+const transporter = nodemailer.createTransport({
+  service : "Gmail",
+  auth : {
+      user: process.env.MailAddress,
+      pass: process.env.PASS
+  }
+});
+
 const conn = mongoose.createConnection(process.env.MongoURI);
 let gfs;
 
@@ -16,30 +25,9 @@ conn.once('open', () => {
 
 const getDashboard = (req, res) => {
   if(req.user.usertype == "recruiter"){
-    User.findById(req.user._id).exec( (error, user) => {
-      if(user){
-        const jobs = [];
-        var i = 0
-        length = user.jobs.length;
-        for(; i < user.jobs.length; i++){
-          Job.findById(user.jobs[i]).exec((error, data) => {
-            if(data){
-              jobs.push(data);
-            }
-
-            if(i == user.jobs.length){
-              length += 1;
-              if(length == user.jobs.length*2){
-                res.render("jobs/jobhistory.ejs", {jobs: jobs, req: req});  
-              }
-            }
-          });
-        }
-        
-      }
-    });  
+    res.redirect("/yourjobs")
   } else {
-    res.render("users/dashboard.ejs", { req: req, user:req.user });
+    res.redirect("/requestedjobs");
   }
 }
 
@@ -62,14 +50,39 @@ const geteditdescription = (req, res) =>{
 }
 
 
+const postsuggestion = (req, res) =>{
+
+  const{
+    email,
+    message,
+    name,
+  } = req.body;
+
+  const options = {
+    from: email, 
+    to: process.env.MailAddress,
+    subject: "Suggestions for the Site",
+    html: "A message from " + `${name}`+ " from the website(suggestion or problem).<br>Email: "+`${email}`+"<br>Message: "+'"'+`${message}`+'"',
+  }
+
+  transporter.sendMail(options, (err, info) => {
+    if(err){
+      res.redirect(req.get('referer'));
+    } else {
+      req.flash("We have received your message. Thamk you for sharing your opinion!")
+      res.redirect("/");
+    }
+  })
+}
+
 
 const posteditprofile = (req, res) =>{
   const { 
     name, 
-    usertype, 
+    
     phone, 
     age, 
-    street,
+    union,
     thana,
     district,
     userOccupation,
@@ -79,12 +92,12 @@ const posteditprofile = (req, res) =>{
    } = req.body;
 
   const errors = [];
-  if (!name || !usertype || !phone || !age || !street || !thana || !district  || !userOccupation || !password) {
-    errors.push("All fields are required!");
+  if (!name || !phone || !age || !union || !thana || !district  || !userOccupation || !password) {
+    errors.push("All fields are required without Socials!");
   }
-  if ( usertype != "recruiter" &&  usertype != "jobseeker") {
+  /*if ( usertype != "recruiter" &&  usertype != "jobseeker") {
     errors.push("Please select a User Type!");
-  }
+  }*/
 
   if (errors.length > 0) {
     req.flash("errors", errors);
@@ -97,10 +110,10 @@ const posteditprofile = (req, res) =>{
           if (err) throw err;
           if (isMatch) {
             user.name = name;
-            user.usertype = usertype;
+            
             user.phone = phone;
             user.age = age; 
-            user.address.street = street;
+            user.address.union = union;
             user.address.thana = thana;
             user.address.district = district;
             user.userOccupation = userOccupation;
@@ -277,7 +290,36 @@ const getCV = (req,res) => {
   });
 }
 
+const getuser = (req,res) => {
+  const id = req.params.id;
+  User.findOne({ _id: id })
+  .then((user) => {
+    if(user){
+      res.render("users/getuserprofile.ejs", {req:req, user:user, errors: req.flash("errors") });
+    }
+  })
+}
+
+const getusercv = (req, res) =>{
+  const id = request.params.id;
+  User.findOne({ _id: id })
+  .then((user) => {
+    if(user){gfs.files.findOne({ filename: user.cv }, (err, file) => {
+      if (!file || file.length === 0) {
+        res.redirect("/dashboard");
+      }
+     else{
+        const readstream = gfs.createReadStream(file.filename);
+        readstream.pipe(res);
+      }
+    });
+    }
+  })
+}
+
+
 module.exports = {
+  postsuggestion,
   getDashboard,
 
   getprofile,
@@ -295,4 +337,6 @@ module.exports = {
   insertCVfilename,
   getCV,
 
+  getuser,
+  getusercv,
 };

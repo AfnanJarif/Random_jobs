@@ -13,8 +13,8 @@
 <section class="inner-banner">
     <div>
         <div class="caption">
-            <text color:"#ffffff" style="font-size: 45px"><%= req.user.name %></text>
-            <p><%= req.user.userOccupation %></p>
+            <text color:"#ffffff" style="font-size: 45px"><%= user.name %></text>
+            <p><%= user.userOccupation %></p>
         </div>
     </div>
 </section>
@@ -50,15 +50,15 @@
                         <div class="profile-content">
                             <ul class="information">
                                 <li><h5>General Info</h5></li>
-                                <li><span>Name:</span><%= req.user.name %></li>
-                                <li><span>Email:</span><%= req.user.email %></li>
-                                <li><span>Phone:</span><%= req.user.phone %></li>
-                                <li><span>Age:</span><%= req.user.age %></li>
-                                <li><span>User Type:</span><%= req.user.usertype %></li></br>
+                                <li><span>Name:</span><%= user.name %></li>
+                                <li><span>Email:</span><%= user.email %></li>
+                                <li><span>Phone:</span><%= user.phone %></li>
+                                <li><span>Age:</span><%= user.age %></li>
+                                <li><span>User Type:</span><%= user.usertype %></li></br>
                                 <li><h5>Address</h5></li>
-                                <li><span>Union:</span><%= req.user.address.union %></li>
-                                <li><span>Thana:</span><%= req.user.address.thana %></li>
-                                <li><span>District:</span><%= req.user.address.district %></li>
+                                <li><span>Union:</span><%= user.address.union %></li>
+                                <li><span>Thana:</span><%= user.address.thana %></li>
+                                <li><span>District:</span><%= user.address.district %></li>
                             </ul>
                         </div>
                     </div>
@@ -68,10 +68,10 @@
                     <div class="col-md-3 col-sm-3"></div>
                     <div class="col-md-9 col-sm-9">
                         <ul class="social">
-                            <%if (req.user.linkedin != null){%>
+                            <%if (user.linkedin != null){%>
                                 <li><a href="<%= user.linkedin %>" class="linkedin"><i class="fa fa-linkedin"></i>Linked In</a></li>
                             <%}%>
-                            <%if (req.user.facebook != null){%>
+                            <%if (user.facebook != null){%>
                                 <li><a href="<%= user.facebook %>" class="facebook"><i class="fa fa-facebook"></i>Facebook</a></li>
                             <%}%>
                         </ul>
@@ -84,9 +84,9 @@
             </div>
             <div class="row">
                 <div class="col-md-12 col-sm-12">
-                    <%if (req.user.description != null){%>
+                    <%if (user.description != null){%>
                         <h5>Description</h5>
-                        <p><%= req.user.description %></p>
+                        <p><%= user.description %></p>
                     <%}%>
                    
                 </div>
@@ -94,9 +94,10 @@
             <br> <br> <br>
             <div class="row">
                 <div class="col-md-12 col-sm-12">
-                    <%if (req.user.cv != null){%>
+                    <%if (user.cv != null){%>
                         <h5>CV</h5>
-                        <embed src="/readcv" width="100%" height="800px" />
+                        <% const sURL="usercv/"+user._id%>
+                        <embed src="<%= sURL %>" width="100%" height="800px" />
                     <%}%>
                 </div>
             </div>

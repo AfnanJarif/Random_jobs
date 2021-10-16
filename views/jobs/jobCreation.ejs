@@ -1,5 +1,5 @@
 <%- include('../partials/head.ejs') %>
-<title>Create Job | Random Jobs</title>
+<title>Post a Job | Random Jobs</title>
 <%- include('../partials/navbar.ejs') %>
 
 <style> 
@@ -45,8 +45,8 @@
 								<option value="freelancing">Freelancing</option>
 								<option value="internship">Internship</option>
 							</select>
-							<input type="date" class="form-control input-lg" name="startdate" placeholder="Start Date" required>
-							<input type="date" class="form-control input-lg" name="enddate"  placeholder="End Date" required>
+							<input type="datetime-local" class="form-control input-lg" name="startdate" required>
+							<input type="datetime-local" class="form-control input-lg" name="enddate"  required>
 							<input type="text" class="form-control input-lg" name="union" placeholder="Union" required>
 							<input type="text" class="form-control input-lg" name="thana" placeholder="Thana" required>
 							<input type="text" class="form-control input-lg" name="district" placeholder="District" required>

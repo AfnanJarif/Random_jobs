@@ -52,13 +52,28 @@ const JobSchema = new mongoose.Schema({
       required: true,
   },
   requests: [{
-    type: String,
+    id: {
+      type: String,
+    },
+    name: {
+      type: String,
+    }
   }],
   assigned: {
-    type: String,
+    id: {
+      type: String,
+    },
+    name: {
+      type: String,
+    },
+  },
+  isassigned:{
+    type: Boolean,
+    default: false,
   },
   done: {
     type: Boolean,
+    default: false,
   },
   date: {
     type: Date,

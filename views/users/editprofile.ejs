@@ -17,14 +17,14 @@
 
                 <h2>Update Profile</h2>
                 <input type="text" class="form-control input-lg" name="name" placeholder="Full Name" value="<%=req.user.name%>" required>
-                <select class="form-control input-lg"  name="usertype" required>
+                <!--<select class="form-control input-lg"  name="usertype" required>
                     <option value="usertype" >Select User Type</option>
                     <option value="recruiter">Recruiter</option>
                     <option value="jobseeker">JobSeeker</option>
-                </select>
+                </select>-->
                 <input type="tel" class="form-control input-lg" name="phone" placeholder="Phone Number" value="<%=req.user.phone%>" required>
                 <input type="number" class="form-control input-lg" name="age" placeholder="Age" value="<%=req.user.age%>" required>
-                <input type="text" class="form-control input-lg" name="street" placeholder="Street" value="<%=req.user.address.street%>" required>
+                <input type="text" class="form-control input-lg" name="union" placeholder="Union" value="<%=req.user.address.union%>" required>
                 <input type="text" class="form-control input-lg" name="thana" placeholder="Thana" value="<%=req.user.address.thana%>" required>
                 <input type="text" class="form-control input-lg" name="district" placeholder="District" value="<%=req.user.address.district%>" required>
                 <input type="text" class="form-control input-lg" name="userOccupation" value="<%=req.user.userOccupation%>" placeholder="Recruiter Type/Occupation">

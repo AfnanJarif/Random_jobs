@@ -20,7 +20,6 @@ const UserSchema = new mongoose.Schema({
   },
   phone: {
     type: Number,
-    unique: true,
     required: true,
     validate : {
         validator : Number.isInteger,
@@ -34,7 +33,7 @@ const UserSchema = new mongoose.Schema({
     type: Number,
   },
   address: {
-      street:{
+      union:{
         type: String,
       },
       thana: {
@@ -52,6 +51,15 @@ const UserSchema = new mongoose.Schema({
     type: String,
   },
   jobs:[{
+    type: String,
+  }],
+  jobrequests: [{
+    type: String,
+  }],
+  requestedjobs:[{
+    type: String,
+  }],
+  assignedjobs:[{
     type: String,
   }],
   wishlistID: {

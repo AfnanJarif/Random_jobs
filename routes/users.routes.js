@@ -13,13 +13,9 @@ const {
     ensureAuthenticated
 } = require("./../middlewares/auth.middleware");
 
-
 const {
-    isRecruiter,
-    isRecruiterdashboard,
-} = require("./../middlewares/isRecruiter.middleware");
+    postsuggestion,
 
-const {
     getDashboard,
     getprofile,
     geteditprofile,
@@ -39,11 +35,9 @@ const {
 
 const conn = mongoose.createConnection(process.env.MongoURI);
 
-// Init gfs
 let gfs;
 
 conn.once('open', () => {
-  // Init stream
   gfs = Grid(conn.db, mongoose.mongo);
   gfs.collection('uploads');
 });
@@ -69,6 +63,8 @@ const storage = new GridFsStorage({
 const upload = multer({ storage });
 
 
+router.post("/suggestion", postsuggestion);
+
 router.get("/dashboard", ensureAuthenticated, getDashboard);
 
 router.get("/profpic", ensureAuthenticated, getPIC);
@@ -85,4 +81,5 @@ router.post("/updateprofile", ensureAuthenticated, posteditprofile);
 
 router.get("/updatedescription", ensureAuthenticated, geteditdescription);
 router.post("/updatedescription", ensureAuthenticated, posteditdescription);
+
 module.exports = router;

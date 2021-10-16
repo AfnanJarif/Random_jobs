@@ -22,11 +22,11 @@
         
         <div class="col-md-6 col-sm-12">
             <h4>Suggestion or Problem</h4>
-            <form>
-                <input type="text" class="form-control input-lg" placeholder="Your Name">
-                <input type="text" class="form-control input-lg" placeholder="Email...">
-                <textarea class="form-control" placeholder="Message"></textarea>
-                <button type="submit" class="btn btn-primary">Login</button>
+            <form action="/suggestion" method="POST">
+                <input type="text" name="name" class="form-control input-lg" placeholder="Your Name">
+                <input type="text" name="email" class="form-control input-lg" placeholder="Email">
+                <textarea class="form-control" name="message" placeholder="Message"></textarea>
+                <button type="submit" class="btn btn-primary">Send</button>
             </form>
         </div>       
     </div>
