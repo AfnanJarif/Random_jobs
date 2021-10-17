@@ -19,28 +19,13 @@ section{
 <div>
     <div class="caption">
     </br>
-    <text color:"#ffffff" style="font-size: 55px">Posted Jobs</text>
+    <text color:"#ffffff" style="font-size: 55px">Search Result</text>
 </div>
 </div>
 </section>
 <br>
 
 <div class="container">
-    <div class="row">
-        <div class="col-md-3 col-sm-3"></div>
-            <div style ="text-align:center" class="col-md-6 col-sm-6">
-                <%if(errors.length>0){%>
-                    <%errors.forEach(error => {%> <br />
-                        <%if(error == "Job Request has been made!"){%>
-                            <div class="alert alert-success"><%= error%></div>
-                        <%} else {%>
-                            <div class="alert alert-danger"><%= error%></div>
-                        <%}%>
-                    <%});%>
-                <%}%>
-            </div>
-        <div class="col-md-3 col-sm-3"></div>
-    </div>
     <% jobs.forEach(job =>{ %>
         <div class="col-md-12">
             <div class="row">

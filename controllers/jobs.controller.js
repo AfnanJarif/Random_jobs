@@ -54,6 +54,14 @@ const postJobCreation = (req, res) => {
     errors.push("Payment must be in Number!");
   }
 
+  if(category == " "){
+    errors.push("Please select a Category!");  
+  }
+
+  if(jobtype == " "){
+    errors.push("Please select a Job Type!");  
+  }
+
 
   if(errors>0){
     req.flush("erros", errors);
@@ -71,11 +79,9 @@ const postJobCreation = (req, res) => {
           jobtype: jobtype,
           startdate: new Date(startdate),
           enddate: new Date(enddate),
-          location : {
-            union: union,
-            thana: thana,
-            district: district,
-          },          
+          union: union,
+          thana: thana,
+          district: district,       
           payment: payment,
           jobdescription: jobdescription,
           document: req.file.filename,
@@ -432,15 +438,63 @@ const getrequestedjobs = (req,res) =>{
 }
 
 const postpostedjobs = (req, res) =>{
-  const searchtext = req.body;
-  Job.find({name: {$regex: searchtext}})
-  .then((jobs) =>{
-    function custom_sort(a, b) {
-      return -1*(new Date(a.date).getTime() - new Date(b.date).getTime());
-    }
+  var {
+    name,
+    category, 
+    jobtype,
+    union,
+    thana,
+    district,
+  } = req.body;
 
-    jobs.sort(custom_sort);
-    res.render("jobs/postedjobs.ejs", {jobs: jobs, errors : req.flash("errors"), req: req});
+  if(category == " "){
+    category = "";
+  }
+  if(jobtype == " "){
+    jobtype = "";
+  }
+
+  Job.find(
+  {
+    name:{
+      $regex: new RegExp(name, "i")
+    },
+    category:{
+      $regex: new RegExp(category, "i")
+    },
+    jobtype:{
+      $regex: new RegExp(jobtype, "i")
+    },
+    union:{
+      $regex: new RegExp(union, "i")
+    },
+    thana:{
+      $regex: new RegExp(thana, "i")
+    },
+    district:{
+      $regex: new RegExp(district, "i")
+    },
+    startdate:{
+      $gte: Date.now(),
+      $lt: new Date("2300-04-30T00:00:00.000Z"),
+    },
+    enddate:{
+      $gte: Date.now(),
+      $lt: new Date("2300-04-30T00:00:00.000Z"),
+    },    
+  })
+  .then((jobs) =>{
+    if(jobs.length > 0){
+      function custom_sort(a, b) {
+        return -1*(new Date(a.startdate).getTime() - new Date(b.startdate).getTime());
+      }
+      jobs.sort(custom_sort);  
+      const errors = [];
+      errors.push("Your Search Result!");
+      res.render("jobs/searchedjobs.ejs", {jobs: jobs, errors : req.flash("errors"), req: req});
+    } else {
+      res.render("jobs/nosearchedjobs.ejs", {req : req});
+    }
   })
   .catch((err)=>{
     console.log(err);

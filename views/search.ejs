@@ -10,40 +10,38 @@
 		<div class="caption">
 			<h2>Find Your Desired Job</h2>
 			<form action="/postedjobs" method="POST">
-				<fieldset>
+				
+					<div class="col-md-2 col-sm-2 no-pad">	
+					</div>
+
 					<div class="col-md-8 col-sm-8 no-pad">
-						<input type="text" name="searchtext" class="form-control border-right" placeholder="Skills, Designation, Companies" />
+						<input type="text" class="form-control input-lg" name="name" placeholder="Job Name">
+						<select class="form-control input-lg"  name="category" placeholder="Select">
+							<option value = " ">Select Category</option>
+							<option value="Computer Science" >Computer Science</option>
+							<option value="Managerial">Managerial</option>
+							<option value="Mechanical">Mechanical</option>
+							<option value="Education">Education</option>
+							<option value="Chores">Chores</option>
+						</select>
+						<select class="form-control input-lg"  name="jobtype" placeholder="Select">
+							<option value = " ">Select Job Type</option>
+							<option value="fulltime">Full Time</option>
+							<option value="parttime">Part Time</option>
+							<option value="freelancing">Freelancing</option>
+							<option value="internship">Internship</option>
+						</select>
+						<input type="text" class="form-control input-lg" name="union" placeholder="Union">
+						<input type="text" class="form-control input-lg" name="thana" placeholder="Thana">
+						<input type="text" class="form-control input-lg" name="district" placeholder="District">
+						<input type="submit" class="btn seub-btn" value="submit" />			
 					</div>
-					<div class="col-md-4 col-sm-4 no-pad">
-						<input type="submit" class="btn seub-btn" value="submit" />
+					<div class="col-md-2 col-sm-2 no-pad">	
 					</div>
-				</fieldset>
+				
 			</form>
 		</div>
 	</div>
 </section>
-
-<!--<section class="features">
-	<div class="container">
-
-		<div class="col-md-6 col-sm-6">
-			<div class="features-content">
-				<span class="box1"><span aria-hidden="true" class="icon-dial"></span></span>
-				<h3>Create An Account</h3>
-				<br>
-				<button type="signup" class="btn btn-primary" oncl>sign up</button>
-			</div>
-		</div>
-		
-		<div class="col-md-6 col-sm-6">
-			<div class="features-content">
-				<span class="box1"><span aria-hidden="true" class="icon-search"></span></span>
-				<h3>Search Desired Job</h3>
-				<br>
-				<button type="jobBrowse" class="btn btn-primary" oncl>Jobs</button>
-			</div>
-		</div>
-	</div>
-</section>	-->
 	
 <%- include('./partials/footer.ejs') %>

@@ -39,19 +39,17 @@ const JobSchema = new mongoose.Schema({
     type: Date,
     required: true,
   },
-  location: {
-    union: {
-      type: String,
-      required: true,
-    },
-    thana: {
-      type: String,
-      required: true,
-    },
-    district: {
-      type: String,
-      required: true,
-    }
+  union: {
+    type: String,
+    required: true,
+  },
+  thana: {
+    type: String,
+    required: true,
+  },
+  district: {
+    type: String,
+    required: true,
   },
   payment: {
       type: Number,
