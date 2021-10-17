@@ -431,6 +431,26 @@ const getrequestedjobs = (req,res) =>{
   })
 }
 
+const postpostedjobs = (req, res) =>{
+  const searchtext = req.body;
+  Job.find({name: {$regex: searchtext}})
+  .then((jobs) =>{
+    function custom_sort(a, b) {
+      return -1*(new Date(a.date).getTime() - new Date(b.date).getTime());
+    }
+
+    jobs.sort(custom_sort);
+    res.render("jobs/postedjobs.ejs", {jobs: jobs, errors : req.flash("errors"), req: req});
+  })
+  .catch((err)=>{
+    console.log(err);
+  })
+}
+
+const getsearch = (req, res) => {
+  res.render("search.ejs", { req: req });
+};
+
 module.exports = {
   getjobdocument,
   getJobCreation, 
@@ -444,5 +464,6 @@ module.exports = {
   getyourjobs,
   getrequestedjobs,
   getpostedjobdetails,
-
+  postpostedjobs,
+  getsearch,
 };

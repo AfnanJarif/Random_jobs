@@ -27,7 +27,8 @@ const {
   getyourjobs,
   getrequestedjobs,
   getpostedjobdetails,
-  
+  postpostedjobs,
+  getsearch,
 } = require("./../controllers/jobs.controller");
 
 const {
@@ -68,6 +69,8 @@ const storage = new GridFsStorage({
 });
 const upload = multer({ storage });
 
+router.get("/search", ensureAuthenticated, getsearch);
+
 router.get("/postedjobs", ensureAuthenticated, getpostedjobs);
 router.get("/postedjobs/:id", ensureAuthenticated, getpostedjobdetails);
 router.get("/postedjobs/jobdocument/:id", ensureAuthenticated, getjobdocument);
@@ -75,6 +78,7 @@ router.get("/postedjobs/request/:id", ensureAuthenticated, jobrequest);
 router.get("/postedjobs/user/:id", ensureAuthenticated, getuser);
 router.get("/postedjobs/user/usercv/:id", ensureAuthenticated, getusercv);
 router.get("/postedjobs/user/userpic/:id", ensureAuthenticated, getuserpic);
+router.post("/postedjobs", ensureAuthenticated, postpostedjobs);
 
 router.get("/requestedjobs", ensureAuthenticated, getrequestedjobs);
 router.get("/requestedjobs/:id", ensureAuthenticated, getdetailedpostedjob);

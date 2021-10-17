@@ -1,14 +1,24 @@
 <%- include('./partials/head.ejs') %>
 		
-<title>Home | Random Jobs</title>
+<title>Search | Random Jobs</title>
 
-<%- include('./partials/homeNavbar.ejs') %>
+<%- include('./partials/navprofilepages.ejs') %>
 
 <!-- Main jumbotron for a primary marketing message or call to action -->
 <section class="main-banner" style="background:#242c36 url(img/slider-01.jpg) no-repeat">
 	<div class="container">
 		<div class="caption">
 			<h2>Find Your Desired Job</h2>
+			<form action="/postedjobs" method="POST">
+				<fieldset>
+					<div class="col-md-8 col-sm-8 no-pad">
+						<input type="text" name="searchtext" class="form-control border-right" placeholder="Skills, Designation, Companies" />
+					</div>
+					<div class="col-md-4 col-sm-4 no-pad">
+						<input type="submit" class="btn seub-btn" value="submit" />
+					</div>
+				</fieldset>
+			</form>
 		</div>
 	</div>
 </section>
