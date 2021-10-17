@@ -89,14 +89,17 @@
                         <h5>Description</h5>
                         <p><%= user.description %></p>
                     <%}%>
-                   
                 </div>
             </div>
             <br> <br> <br>
             <div class="row">
                 <div class="col-md-12 col-sm-12">
                     <%if (user.cv != null){%>
-                        <h5>CV</h5>
+                        <% if(user.usertype=="jobseeker"){ %>
+                            <h5>CV</h5>
+                        <% } else { %>
+                            <h5>More detailed Information</h5>
+                        <% } %>
                         <% const sURL="usercv/"+user._id%>
                         <embed src="<%= sURL %>" width="100%" height="800px" />
                     <%}%>

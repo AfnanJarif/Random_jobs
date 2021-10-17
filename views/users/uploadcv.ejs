@@ -23,8 +23,14 @@
                     <%})%>
                 </div>
                 <%}%>
+
+                <% if(user.usertype=="jobseeker"){ %>
+                    <h2>Upload CV</h2>
+                <% } else { %>
+                    <h2>Upload a detailed Document</h2>
+                <% } %>
            
-                <h2>Upload CV</h2>
+                
                 <div class="custom-file mb-3"></div>
                     <input type="file" name="file" id="file" class="custom-file-input">
                     </br>
