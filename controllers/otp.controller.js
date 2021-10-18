@@ -24,7 +24,7 @@ const postverifyotp = (req, res) => {
         if(otp){
             const userotp = otp.otpcode;
             const diff = new Date().getTime() - otp.otpcodetime;
-            console.log(diff);
+           
             if(diff < 0){
                 if(encodeotp == userotp){
                     bcrypt.genSalt(10, (err, salt) => {
@@ -45,7 +45,7 @@ const postverifyotp = (req, res) => {
                                     newUser
                                     .save()
                                     .then(() => {
-                                        let error = "Your account have been created Successfully. Please Sign In!";
+                                        let error = "Your account has been created Successfully. Please Sign In!";
                                         req.flash("error", error);
                                         res.redirect("/signin");
                                     })
