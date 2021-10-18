@@ -62,7 +62,7 @@ const postsuggestion = (req, res) =>{
     from: email, 
     to: process.env.MailAddress,
     subject: "Suggestions for the Site",
-    html: "A message from " + `${name}`+ " from the website(suggestion or problem).<br>Email: "+`${email}`+"<br>Message: "+'"'+`${message}`+'"',
+    html: "A message from " + `${name}`+ " from the website(suggestion or problem):<br>Email: "+`${email}`+"<br>Message: "+'"'+`${message}`+'"',
   }
 
   transporter.sendMail(options, (err, info) => {
